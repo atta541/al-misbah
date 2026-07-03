@@ -1,0 +1,305 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+////////////////////////////////////////////////////////////
+///
+/// ADMIN
+/// Only one administrator manages the entire NGO website.
+/// Authentication can later be extended with NextAuth/Auth.js.
+///
+////////////////////////////////////////////////////////////
+
+model Admin {
+  id           String   @id @default(cuid())
+  fullName     String
+  email        String   @unique
+  passwordHash String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// HERO SLIDES
+/// Images shown inside the homepage carousel.
+/// Supports multiple slides with title, subtitle and button.
+///
+////////////////////////////////////////////////////////////
+
+model HeroSlide {
+  id String @id @default(cuid())
+
+  title       String
+  subtitle    String?
+  description String?
+
+  imageUrl String
+
+  buttonText String?
+  buttonLink String?
+
+  order Int @default(0)
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// HOMEPAGE VIDEO
+/// Stores the featured NGO introduction video.
+/// Usually only one record exists.
+///
+////////////////////////////////////////////////////////////
+
+model HomeVideo {
+  id String @id @default(cuid())
+
+  title String
+
+  description String?
+
+  videoUrl String
+
+  thumbnailUrl String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECTS
+/// NGO projects displayed on homepage and project pages.
+///
+////////////////////////////////////////////////////////////
+
+model Project {
+  id String @id @default(cuid())
+
+  title String
+
+  slug String @unique
+
+  shortDescription String
+
+  description String @db.Text
+
+  featuredImage String
+
+  location String?
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  isFeatured Boolean @default(false)
+
+  isPublished Boolean @default(true)
+
+  order Int @default(0)
+
+  images ProjectImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECT IMAGES
+/// Additional images attached to a project.
+/// Images are stored in Cloudinary.
+///
+////////////////////////////////////////////////////////////
+
+model ProjectImage {
+  id String @id @default(cuid())
+
+  imageUrl String
+
+  caption String?
+
+  order Int @default(0)
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// GALLERY COLLECTION
+/// Represents albums/categories inside gallery page.
+/// Example:
+/// Flood Relief
+/// Ramadan 2026
+/// School Construction
+///
+////////////////////////////////////////////////////////////
+
+model GalleryCollection {
+  id String @id @default(cuid())
+
+  title String
+
+  slug String @unique
+
+  description String?
+
+  coverImage String?
+
+  order Int @default(0)
+
+  images GalleryImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// GALLERY IMAGES
+/// Pinterest style gallery images.
+/// Width and height help rendering masonry layout.
+///
+////////////////////////////////////////////////////////////
+
+model GalleryImage {
+  id String @id @default(cuid())
+
+  imageUrl String
+
+  caption String?
+
+  width Int?
+
+  height Int?
+
+  order Int @default(0)
+
+  galleryId String
+
+  gallery GalleryCollection @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([galleryId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// STATIC PAGES
+/// Used for:
+/// About Us
+/// Privacy Policy
+/// Terms & Conditions
+/// Mission
+/// Vision
+/// Donation Policy
+///
+////////////////////////////////////////////////////////////
+
+model StaticPage {
+  id String @id @default(cuid())
+
+  title String
+
+  slug String @unique
+
+  content String @db.Text
+
+  seoTitle String?
+
+  seoDescription String?
+
+  isPublished Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// SITE SETTINGS
+/// Stores global website information.
+/// Normally only one record exists.
+///
+////////////////////////////////////////////////////////////
+
+model SiteSettings {
+  id String @id @default(cuid())
+
+  websiteName String
+
+  tagline String?
+
+  logoUrl String?
+
+  faviconUrl String?
+
+  email String?
+
+  phone String?
+
+  whatsapp String?
+
+  address String?
+
+  facebook String?
+
+  instagram String?
+
+  youtube String?
+
+  twitter String?
+
+  linkedin String?
+
+  footerDescription String?
+
+  copyrightText String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+///
+/// CONTACT MESSAGES
+/// Stores inquiries submitted from Contact page.
+///
+////////////////////////////////////////////////////////////
+
+model ContactMessage {
+  id String @id @default(cuid())
+
+  fullName String
+
+  email String
+
+  phone String?
+
+  subject String?
+
+  message String @db.Text
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
