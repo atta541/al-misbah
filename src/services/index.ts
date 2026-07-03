@@ -1,10 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 export { heroService } from "@/services/hero.service";
-
-export const homeVideoService = {
-  getActive: () => prisma.homeVideo.findFirst({ where: { isActive: true } }),
-};
+export { homeVideoService } from "@/services/home-video.service";
 
 export const projectService = {
   listPublished: () =>

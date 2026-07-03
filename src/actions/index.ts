@@ -8,3 +8,8 @@ export {
   toggleHeroSlideActive,
   type HeroActionState,
 } from "./hero";
+export {
+  saveHomeVideo,
+  removeHomeVideo,
+  type HomeVideoActionState,
+} from "./home-video";

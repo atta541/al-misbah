@@ -69,7 +69,13 @@ model HomeVideo {
 
   description String?
 
+  highlightOne String?
+
+  highlightTwo String?
+
   videoUrl String
+
+  videoPublicId String?
 
   thumbnailUrl String?
 

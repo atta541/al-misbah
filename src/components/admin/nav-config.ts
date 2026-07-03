@@ -7,6 +7,7 @@ import {
   IconPages,
   IconProjects,
   IconSettings,
+  IconVideo,
 } from "@/components/admin/icons";
 import { adminRoutes } from "@/lib/routes";
 
@@ -32,6 +33,14 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Hero Slides",
     description: "Manage homepage carousel slides and call-to-action buttons.",
     icon: IconHero,
+  },
+  {
+    href: adminRoutes.homeVideo,
+    label: "Video",
+    title: "Homepage Video",
+    description:
+      "Upload the NGO introduction video shown below the hero section.",
+    icon: IconVideo,
   },
   {
     href: adminRoutes.projects,

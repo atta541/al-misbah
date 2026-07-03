@@ -12,6 +12,7 @@ export const adminRoutes = {
   login: "/admin/login",
   dashboard: "/admin/dashboard",
   hero: "/admin/hero",
+  homeVideo: "/admin/home-video",
   projects: "/admin/projects",
   gallery: "/admin/gallery",
   pages: "/admin/pages",

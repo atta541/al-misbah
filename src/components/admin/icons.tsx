@@ -36,6 +36,15 @@ export function IconHero(props: IconProps) {
   );
 }
 
+export function IconVideo(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m10 9 5 3-5 3z" />
+    </svg>
+  );
+}
+
 export function IconProjects(props: IconProps) {
   return (
     <svg {...base} {...props}>
