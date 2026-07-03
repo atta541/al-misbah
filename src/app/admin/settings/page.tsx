@@ -1,10 +1,14 @@
-import { PageShell } from "@/components/shared/page-shell";
+import { AdminPageShell } from "@/components/admin/admin-page-shell";
+import { adminNavItems } from "@/components/admin/nav-config";
+
+const page = adminNavItems.find((item) => item.href === "/admin/settings")!;
 
 export default function AdminSettingsPage() {
   return (
-    <PageShell
-      title="Site Settings"
-      description="Global website settings, logo, social links, and footer content."
-    />
+    <AdminPageShell description={page.description}>
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+        Site settings form coming next.
+      </div>
+    </AdminPageShell>
   );
 }

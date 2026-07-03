@@ -1,10 +1,14 @@
-import { PageShell } from "@/components/shared/page-shell";
+import { AdminPageShell } from "@/components/admin/admin-page-shell";
+import { adminNavItems } from "@/components/admin/nav-config";
+
+const page = adminNavItems.find((item) => item.href === "/admin/gallery")!;
 
 export default function AdminGalleryPage() {
   return (
-    <PageShell
-      title="Gallery"
-      description="Manage gallery collections and images (GalleryCollection, GalleryImage)."
-    />
+    <AdminPageShell description={page.description}>
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+        Gallery management UI coming next.
+      </div>
+    </AdminPageShell>
   );
 }

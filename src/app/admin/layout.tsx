@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { AdminSidebar } from "@/components/admin/sidebar";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { getSession } from "@/lib/auth";
 
 export default async function AdminLayout({
@@ -15,10 +15,5 @@ export default async function AdminLayout({
 
   const session = await getSession();
 
-  return (
-    <div className="flex min-h-screen bg-zinc-100">
-      <AdminSidebar session={session} />
-      <div className="flex-1">{children}</div>
-    </div>
-  );
+  return <AdminShell session={session}>{children}</AdminShell>;
 }

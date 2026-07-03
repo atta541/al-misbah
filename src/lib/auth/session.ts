@@ -1,8 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { SESSION_DURATION_SECONDS } from "@/lib/auth/session-config";
 
 export const ADMIN_SESSION_COOKIE = "admin_session";
-const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7;
 
 export type SessionPayload = {
   adminId: string;

@@ -9,3 +9,4 @@ export {
   verifySessionToken,
   type SessionPayload,
 } from "./session";
+export { getSessionDurationDays, SESSION_DURATION_SECONDS } from "./session-config";

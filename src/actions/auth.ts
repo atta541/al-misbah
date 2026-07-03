@@ -7,26 +7,39 @@ import { adminRoutes } from "@/lib/routes";
 import { adminService } from "@/services";
 import { adminLoginSchema } from "@/validations/auth";
 
+export type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
 export type LoginState = {
   error?: string;
   fieldErrors?: {
     email?: string[];
     password?: string[];
   };
+  values?: LoginFormValues;
 };
+
+function getFormValues(formData: FormData): LoginFormValues {
+  return {
+    email: String(formData.get("email") ?? "").trim(),
+    password: String(formData.get("password") ?? ""),
+  };
+}
 
 export async function loginAdmin(
   _prevState: LoginState | null,
   formData: FormData,
 ): Promise<LoginState> {
-  const parsed = adminLoginSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
+  const values = getFormValues(formData);
+
+  const parsed = adminLoginSchema.safeParse(values);
 
   if (!parsed.success) {
     return {
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values,
     };
   }
 
@@ -34,7 +47,8 @@ export async function loginAdmin(
 
   if (!admin || !(await verifyPassword(parsed.data.password, admin.passwordHash))) {
     return {
-      error: "Invalid email or password.",
+      error: "Invalid email or password. Please check your credentials and try again.",
+      values,
     };
   }
 
