@@ -1,10 +1,16 @@
 import { PageShell } from "@/components/shared/page-shell";
 import { HomeHeroSection } from "@/components/website/home-hero-section";
+import { heroService } from "@/services/hero.service";
 
-export default function HomePage() {
+// ISR: homepage revalidates every hour; admin updates also trigger on-demand revalidation.
+export const revalidate = 3600;
+
+export default async function HomePage() {
+  const slides = await heroService.listActive();
+
   return (
     <>
-      <HomeHeroSection />
+      <HomeHeroSection slides={slides} />
 
       <PageShell
         title="What we are building"

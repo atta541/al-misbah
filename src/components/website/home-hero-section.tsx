@@ -1,34 +1,33 @@
-import { Suspense } from "react";
-import { HeroSection } from "@/components/website/hero-section";
-import { HeroSectionFallback } from "@/components/website/hero-section-fallback";
-import { heroService } from "@/services";
+import { HeroCarousel, type HeroSlideData } from "@/components/website/hero-carousel";
+import { HeroSectionEmpty } from "@/components/website/hero-section-empty";
+import { NAV_TOP_BAR_SPACER_CLASS } from "@/lib/nav-layout";
+import type { HeroSlide } from "@/types";
 
-async function HeroSectionContent() {
-  const slides = await heroService.listActive();
-  const slide = slides[0];
+type HomeHeroSectionProps = {
+  slides: HeroSlide[];
+};
 
-  return (
-    <HeroSection
-      eyebrow="Humanitarian NGO"
-      title={slide?.title ?? "A culture of verifiable impact"}
-      description={
-        slide?.description ??
-        slide?.subtitle ??
-        "Al-Misbah Center works on the ground to deliver relief, education, and sustainable projects for communities in need."
-      }
-      primaryCta={{
-        label: slide?.buttonText ?? "Start Donating",
-        href: slide?.buttonLink ?? "/contact",
-      }}
-      imageUrl={slide?.imageUrl}
-    />
-  );
+function toHeroSlideData(slide: HeroSlide): HeroSlideData {
+  return {
+    id: slide.id,
+    title: slide.title,
+    subtitle: slide.subtitle,
+    description: slide.description,
+    imageUrl: slide.imageUrl,
+    buttonText: slide.buttonText,
+    buttonLink: slide.buttonLink,
+  };
 }
 
-export function HomeHeroSection() {
+export function HomeHeroSection({ slides }: HomeHeroSectionProps) {
   return (
-    <Suspense fallback={<HeroSectionFallback />}>
-      <HeroSectionContent />
-    </Suspense>
+    <>
+      <div className={NAV_TOP_BAR_SPACER_CLASS} aria-hidden />
+      {slides.length === 0 ? (
+        <HeroSectionEmpty />
+      ) : (
+        <HeroCarousel slides={slides.map(toHeroSlideData)} />
+      )}
+    </>
   );
 }

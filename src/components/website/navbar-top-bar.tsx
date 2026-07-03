@@ -20,8 +20,8 @@ export function NavbarTopBar({ settings }: NavbarTopBarProps) {
   ].filter((item): item is typeof item & { href: string } => Boolean(item.href));
 
   return (
-    <div className="bg-accent text-accent-foreground">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5 text-xs sm:px-6 sm:text-sm">
+    <div className="flex min-h-[var(--nav-top-bar-height)] items-center bg-accent pb-[var(--nav-main-overlap)] text-accent-foreground">
+      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs sm:px-6 sm:text-sm">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <a
             href={`mailto:${email}`}

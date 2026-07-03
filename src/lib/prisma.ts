@@ -7,7 +7,7 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 // Bump when Prisma schema changes so dev server picks up a fresh client.
-const PRISMA_SCHEMA_VERSION = "20260703100528_add_theme_preset";
+const PRISMA_SCHEMA_VERSION = "20260703103000_add_hero_image_public_id";
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;

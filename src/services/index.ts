@@ -1,13 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export const heroService = {
-  listActive: () =>
-    prisma.heroSlide.findMany({
-      where: { isActive: true },
-      orderBy: { order: "asc" },
-    }),
-  listAll: () => prisma.heroSlide.findMany({ orderBy: { order: "asc" } }),
-};
+export { heroService } from "@/services/hero.service";
 
 export const homeVideoService = {
   getActive: () => prisma.homeVideo.findFirst({ where: { isActive: true } }),

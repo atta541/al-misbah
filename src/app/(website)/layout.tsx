@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { WebsiteFooter } from "@/components/website/header-footer";
 import { NavbarFallback } from "@/components/website/navbar-fallback";
+import { WebsiteMain } from "@/components/website/website-main";
 import { WebsiteNavbarServer } from "@/components/website/website-navbar-server";
 import { DynamicWebsiteTheme } from "@/components/website/dynamic-theme";
 import { siteSettingsService } from "@/services";
@@ -18,7 +19,7 @@ export default async function WebsiteLayout({
       <Suspense fallback={<NavbarFallback />}>
         <WebsiteNavbarServer />
       </Suspense>
-      <main className="flex-1">{children}</main>
+      <WebsiteMain>{children}</WebsiteMain>
       <WebsiteFooter />
     </div>
   );

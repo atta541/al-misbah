@@ -41,6 +41,7 @@ model HeroSlide {
   description String?
 
   imageUrl String
+  imagePublicId String?
 
   buttonText String?
   buttonLink String?

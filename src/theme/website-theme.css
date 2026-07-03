@@ -49,6 +49,16 @@
   --theme-success: #15803d;
   --theme-error: #b91c1c;
   --theme-warning: #b45309;
+
+  /* Navbar + hero layout (gold top bar, overlapping main nav) */
+  --nav-top-bar-height: 6.5rem;
+  --nav-main-height: 5.5rem;
+  --nav-main-overlap: calc(var(--nav-main-height) / 2);
+  --nav-main-top: calc(var(--nav-top-bar-height) - var(--nav-main-overlap));
+  --hero-content-top: calc(var(--nav-main-overlap) + 2rem);
+  --site-header-offset: calc(
+    var(--nav-top-bar-height) + var(--nav-main-overlap) + 1rem
+  );
 }
 
 /*
