@@ -275,6 +275,8 @@ model SiteSettings {
 
   copyrightText String?
 
+  themePreset String @default("emerald-trust")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

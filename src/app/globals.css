@@ -1,28 +1,45 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "../theme/website-theme.css";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--theme-background);
+  --color-foreground: var(--theme-text);
+  --color-muted: var(--theme-text-muted);
+  --color-surface: var(--theme-surface);
+  --color-surface-muted: var(--theme-surface-muted);
+  --color-surface-dark: var(--theme-surface-dark);
+  --color-brand: var(--theme-primary);
+  --color-brand-light: var(--theme-primary-light);
+  --color-brand-dark: var(--theme-primary-dark);
+  --color-brand-foreground: var(--theme-primary-foreground);
+  --color-accent: var(--theme-accent);
+  --color-accent-light: var(--theme-accent-light);
+  --color-accent-dark: var(--theme-accent-dark);
+  --color-accent-foreground: var(--theme-accent-foreground);
+  --color-border: var(--theme-border);
+  --color-border-strong: var(--theme-border-strong);
+  --color-ring: var(--theme-ring);
+  --color-header-bg: var(--theme-header-bg);
+  --color-header-text: var(--theme-header-text);
+  --color-footer-bg: var(--theme-footer-bg);
+  --color-footer-text: var(--theme-footer-text);
+  --color-footer-muted: var(--theme-footer-muted);
+  --color-success: var(--theme-success);
+  --color-error: var(--theme-error);
+  --color-warning: var(--theme-warning);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--theme-background);
+  color: var(--theme-text);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+.website {
+  background: var(--theme-background);
+  color: var(--theme-text);
 }
 
 .admin-sidebar {

@@ -1,0 +1,186 @@
+/**
+ * =============================================================================
+ * AL-MISBAH WEBSITE THEME
+ * =============================================================================
+ *
+ * FALLBACK ONLY — the live website theme is loaded from the database
+ * (Admin → Settings). Edit presets in `src/theme/presets.ts` to add themes.
+ * =============================================================================
+ */
+
+:root {
+  /* Brand */
+  --theme-primary: #0f5c4c;
+  --theme-primary-light: #1a7a66;
+  --theme-primary-dark: #0a4036;
+  --theme-primary-foreground: #ffffff;
+
+  /* Accent (buttons, highlights, links hover) */
+  --theme-accent: #c9a227;
+  --theme-accent-light: #dbb94a;
+  --theme-accent-dark: #a8841a;
+  --theme-accent-foreground: #1c1917;
+
+  /* Surfaces */
+  --theme-background: #faf8f5;
+  --theme-surface: #ffffff;
+  --theme-surface-muted: #f3f0ea;
+  --theme-surface-dark: #0f5c4c;
+
+  /* Text */
+  --theme-text: #1c1917;
+  --theme-text-muted: #57534e;
+  --theme-text-inverse: #ffffff;
+  --theme-text-on-primary: #ffffff;
+
+  /* Borders & rings */
+  --theme-border: #e7e5e4;
+  --theme-border-strong: #d6d3d1;
+  --theme-ring: #1a7a66;
+
+  /* Header & footer */
+  --theme-header-bg: #ffffff;
+  --theme-header-text: #1c1917;
+  --theme-footer-bg: #0a4036;
+  --theme-footer-text: #e7e5e4;
+  --theme-footer-muted: #a8a29e;
+
+  /* States */
+  --theme-success: #15803d;
+  --theme-error: #b91c1c;
+  --theme-warning: #b45309;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * PRESET 2: navy-hope
+ * Professional, calm, international NGO feel
+ * -----------------------------------------------------------------------------
+ *
+ * --theme-primary: #1e3a5f;
+ * --theme-primary-light: #2d5282;
+ * --theme-primary-dark: #142840;
+ * --theme-primary-foreground: #ffffff;
+ * --theme-accent: #3b82f6;
+ * --theme-accent-light: #60a5fa;
+ * --theme-accent-dark: #2563eb;
+ * --theme-accent-foreground: #ffffff;
+ * --theme-background: #f8fafc;
+ * --theme-surface: #ffffff;
+ * --theme-surface-muted: #f1f5f9;
+ * --theme-surface-dark: #142840;
+ * --theme-text: #0f172a;
+ * --theme-text-muted: #475569;
+ * --theme-text-inverse: #ffffff;
+ * --theme-text-on-primary: #ffffff;
+ * --theme-border: #e2e8f0;
+ * --theme-border-strong: #cbd5e1;
+ * --theme-ring: #3b82f6;
+ * --theme-header-bg: #ffffff;
+ * --theme-header-text: #0f172a;
+ * --theme-footer-bg: #142840;
+ * --theme-footer-text: #cbd5e1;
+ * --theme-footer-muted: #94a3b8;
+ * --theme-success: #15803d;
+ * --theme-error: #b91c1c;
+ * --theme-warning: #b45309;
+ *
+ * -----------------------------------------------------------------------------
+ * PRESET 3: sage-community
+ * Earthy, community-focused, warm and approachable
+ * -----------------------------------------------------------------------------
+ *
+ * --theme-primary: #4a6741;
+ * --theme-primary-light: #5f8254;
+ * --theme-primary-dark: #364d2f;
+ * --theme-primary-foreground: #ffffff;
+ * --theme-accent: #d97706;
+ * --theme-accent-light: #f59e0b;
+ * --theme-accent-dark: #b45309;
+ * --theme-accent-foreground: #ffffff;
+ * --theme-background: #f7f6f2;
+ * --theme-surface: #ffffff;
+ * --theme-surface-muted: #eeede6;
+ * --theme-surface-dark: #364d2f;
+ * --theme-text: #292524;
+ * --theme-text-muted: #57534e;
+ * --theme-text-inverse: #ffffff;
+ * --theme-text-on-primary: #ffffff;
+ * --theme-border: #e7e5e4;
+ * --theme-border-strong: #d6d3d1;
+ * --theme-ring: #5f8254;
+ * --theme-header-bg: #ffffff;
+ * --theme-header-text: #292524;
+ * --theme-footer-bg: #364d2f;
+ * --theme-footer-text: #e7e5e4;
+ * --theme-footer-muted: #a8a29e;
+ * --theme-success: #15803d;
+ * --theme-error: #b91c1c;
+ * --theme-warning: #b45309;
+ *
+ * -----------------------------------------------------------------------------
+ * PRESET 4: teal-light
+ * Fresh, modern, clean charity website
+ * -----------------------------------------------------------------------------
+ *
+ * --theme-primary: #0d9488;
+ * --theme-primary-light: #14b8a6;
+ * --theme-primary-dark: #0f766e;
+ * --theme-primary-foreground: #ffffff;
+ * --theme-accent: #f59e0b;
+ * --theme-accent-light: #fbbf24;
+ * --theme-accent-dark: #d97706;
+ * --theme-accent-foreground: #1c1917;
+ * --theme-background: #ffffff;
+ * --theme-surface: #ffffff;
+ * --theme-surface-muted: #f0fdfa;
+ * --theme-surface-dark: #0f766e;
+ * --theme-text: #134e4a;
+ * --theme-text-muted: #5f6b6a;
+ * --theme-text-inverse: #ffffff;
+ * --theme-text-on-primary: #ffffff;
+ * --theme-border: #ccfbf1;
+ * --theme-border-strong: #99f6e4;
+ * --theme-ring: #14b8a6;
+ * --theme-header-bg: #ffffff;
+ * --theme-header-text: #134e4a;
+ * --theme-footer-bg: #0f766e;
+ * --theme-footer-text: #ccfbf1;
+ * --theme-footer-muted: #99f6e4;
+ * --theme-success: #15803d;
+ * --theme-error: #b91c1c;
+ * --theme-warning: #b45309;
+ *
+ * -----------------------------------------------------------------------------
+ * PRESET 5: burgundy-dignity
+ * Traditional, dignified, strong institutional presence
+ * -----------------------------------------------------------------------------
+ *
+ * --theme-primary: #7f1d1d;
+ * --theme-primary-light: #991b1b;
+ * --theme-primary-dark: #5f1515;
+ * --theme-primary-foreground: #ffffff;
+ * --theme-accent: #ca8a04;
+ * --theme-accent-light: #eab308;
+ * --theme-accent-dark: #a16207;
+ * --theme-accent-foreground: #1c1917;
+ * --theme-background: #fffbeb;
+ * --theme-surface: #ffffff;
+ * --theme-surface-muted: #fef3c7;
+ * --theme-surface-dark: #5f1515;
+ * --theme-text: #292524;
+ * --theme-text-muted: #57534e;
+ * --theme-text-inverse: #ffffff;
+ * --theme-text-on-primary: #ffffff;
+ * --theme-border: #fde68a;
+ * --theme-border-strong: #fcd34d;
+ * --theme-ring: #991b1b;
+ * --theme-header-bg: #ffffff;
+ * --theme-header-text: #292524;
+ * --theme-footer-bg: #5f1515;
+ * --theme-footer-text: #fde68a;
+ * --theme-footer-muted: #d6d3d1;
+ * --theme-success: #15803d;
+ * --theme-error: #b91c1c;
+ * --theme-warning: #b45309;
+ */

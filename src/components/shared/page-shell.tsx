@@ -6,16 +6,19 @@ type PageShellProps = {
 
 export function PageShell({ title, description, children }: PageShellProps) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-12">
+    <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
       <div className="max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
+          Al-Misbah Center
+        </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-3 text-base leading-7 text-zinc-600">{description}</p>
+          <p className="mt-4 text-base leading-7 text-muted">{description}</p>
         ) : null}
       </div>
-      {children ? <div className="mt-8">{children}</div> : null}
+      {children ? <div className="mt-10">{children}</div> : null}
     </section>
   );
 }

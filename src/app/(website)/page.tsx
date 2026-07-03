@@ -1,22 +1,28 @@
 import { PageShell } from "@/components/shared/page-shell";
+import { HomeHeroSection } from "@/components/website/home-hero-section";
 
 export default function HomePage() {
   return (
-    <PageShell
-      title="Al-Misbah Center"
-      description="Welcome to the NGO website. Hero slides, featured projects, and introduction video will render here."
-    >
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-dashed border-zinc-300 p-6 text-sm text-zinc-500">
-          Hero carousel section
+    <>
+      <HomeHeroSection />
+
+      <PageShell
+        title="What we are building"
+        description="Homepage sections will connect to your database — featured projects and introduction video."
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {["Featured projects", "Introduction video", "Impact highlights"].map(
+            (item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-border bg-surface p-6 text-sm text-muted shadow-sm"
+              >
+                {item} section
+              </div>
+            ),
+          )}
         </div>
-        <div className="rounded-xl border border-dashed border-zinc-300 p-6 text-sm text-zinc-500">
-          Featured projects section
-        </div>
-        <div className="rounded-xl border border-dashed border-zinc-300 p-6 text-sm text-zinc-500 sm:col-span-2">
-          Home introduction video section
-        </div>
-      </div>
-    </PageShell>
+      </PageShell>
+    </>
   );
 }

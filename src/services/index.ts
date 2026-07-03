@@ -46,6 +46,39 @@ export const staticPageService = {
 
 export const siteSettingsService = {
   get: () => prisma.siteSettings.findFirst(),
+
+  getOrCreate: async () => {
+    const existing = await prisma.siteSettings.findFirst();
+
+    if (existing) {
+      return existing;
+    }
+
+    return prisma.siteSettings.create({
+      data: {
+        websiteName: "Al-Misbah Center",
+        themePreset: "emerald-trust",
+      },
+    });
+  },
+
+  updateThemePreset: async (themePreset: string) => {
+    const existing = await prisma.siteSettings.findFirst();
+
+    if (existing) {
+      return prisma.siteSettings.update({
+        where: { id: existing.id },
+        data: { themePreset },
+      });
+    }
+
+    return prisma.siteSettings.create({
+      data: {
+        websiteName: "Al-Misbah Center",
+        themePreset,
+      },
+    });
+  },
 };
 
 export const contactMessageService = {
