@@ -6,10 +6,7 @@ export type ContactMessageInput = {
   message: string;
 };
 
-export type AdminLoginInput = {
-  email: string;
-  password: string;
-};
+export type { AdminLoginInput } from "./auth";
 
 export type HeroSlideInput = {
   title: string;
