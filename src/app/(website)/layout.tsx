@@ -20,7 +20,22 @@ export default async function WebsiteLayout({
         <WebsiteNavbarServer />
       </Suspense>
       <WebsiteMain>{children}</WebsiteMain>
-      <WebsiteFooter />
+      <WebsiteFooter
+        settings={{
+          websiteName: settings.websiteName,
+          tagline: settings.tagline,
+          logoUrl: settings.logoUrl,
+          footerDescription: settings.footerDescription,
+          copyrightText: settings.copyrightText,
+          email: settings.email,
+          phone: settings.phone,
+          whatsapp: settings.whatsapp,
+          address: settings.address,
+          facebook: settings.facebook,
+          instagram: settings.instagram,
+          youtube: settings.youtube,
+        }}
+      />
     </div>
   );
 }

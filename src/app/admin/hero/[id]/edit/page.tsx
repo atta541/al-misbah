@@ -18,7 +18,7 @@ export default async function AdminHeroEditPage({ params }: AdminHeroEditPagePro
   }
 
   return (
-    <AdminPageShell description="Update slide content or replace the Cloudinary image.">
+    <AdminPageShell description="Replace the homepage hero image or change visibility.">
       <div className="mb-5">
         <Link
           href={adminRoutes.hero}

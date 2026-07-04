@@ -4,27 +4,6 @@ type HomeVideoSectionProps = {
   video: HomeVideo | null;
 };
 
-function HighlightPill({
-  children,
-  accent,
-}: {
-  children: string;
-  accent?: boolean;
-}) {
-  return (
-    <span
-      className={[
-        "inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium",
-        accent
-          ? "bg-white/10 text-accent"
-          : "bg-white/15 text-white",
-      ].join(" ")}
-    >
-      {children}
-    </span>
-  );
-}
-
 export function HomeVideoSection({ video }: HomeVideoSectionProps) {
   if (!video) {
     return null;
@@ -35,47 +14,52 @@ export function HomeVideoSection({ video }: HomeVideoSectionProps) {
   );
 
   return (
-    <section className="border-t border-border bg-background py-14 sm:py-20">
+    <section className="border-t border-border bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-0">
-          <div className="relative z-10 shrink-0 lg:w-[46%] lg:pr-0">
-            <div className="overflow-hidden rounded-2xl bg-black shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-black/10">
-              <video
-                controls
-                playsInline
-                preload="metadata"
-                poster={video.thumbnailUrl ?? undefined}
-                className="aspect-video w-full object-cover"
-              >
-                <source src={video.videoUrl} type="video/mp4" />
-                <source src={video.videoUrl} type="video/webm" />
-                Your browser does not support embedded videos.
-              </video>
-            </div>
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="overflow-hidden rounded-[1.75rem] bg-black shadow-[0_28px_60px_-28px_rgba(15,92,76,0.35)]">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster={video.thumbnailUrl ?? undefined}
+              className="aspect-video w-full object-cover"
+            >
+              <source src={video.videoUrl} type="video/mp4" />
+              <source src={video.videoUrl} type="video/webm" />
+              Your browser does not support embedded videos.
+            </video>
           </div>
 
-          <div className="relative flex flex-1 items-center lg:-ml-10 lg:pl-16">
-            <div className="w-full rounded-2xl bg-brand-dark px-6 py-8 sm:px-8 sm:py-10 lg:min-h-[20rem] lg:rounded-bl-none lg:rounded-tl-none lg:rounded-tr-[2rem] lg:rounded-br-[2rem] lg:px-10 lg:py-12">
-              <h2 className="text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-[2rem]">
-                {video.title}
-              </h2>
+          <div className="max-w-xl lg:max-w-none">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
+              Our story
+            </p>
 
-              {video.description ? (
-                <p className="mt-5 text-sm leading-7 text-white/90 sm:text-[15px] sm:leading-8">
-                  {video.description}
-                </p>
-              ) : null}
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {video.title}
+            </h2>
 
-              {highlights.length > 0 ? (
-                <div className="mt-6 flex flex-wrap gap-2.5">
-                  {highlights.map((label, index) => (
-                    <HighlightPill key={label} accent={index === 1}>
-                      {label}
-                    </HighlightPill>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+            <div className="mt-5 h-1 w-14 rounded-full bg-accent" />
+
+            {video.description ? (
+              <p className="mt-6 text-base leading-8 text-muted sm:text-[17px]">
+                {video.description}
+              </p>
+            ) : null}
+
+            {highlights.length > 0 ? (
+              <div className="mt-8 flex flex-wrap gap-3">
+                {highlights.map((label) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center rounded-full border border-brand/15 bg-brand/5 px-4 py-2 text-sm font-medium text-brand"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

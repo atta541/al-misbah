@@ -13,3 +13,13 @@ export {
   removeHomeVideo,
   type HomeVideoActionState,
 } from "./home-video";
+export {
+  createProject,
+  updateProject,
+  deleteProject,
+  deleteProjectGalleryImage,
+  toggleProjectFeatured,
+  toggleProjectPublished,
+  suggestProjectSlug,
+  type ProjectActionState,
+} from "./project";

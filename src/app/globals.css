@@ -55,3 +55,17 @@ body {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 999px;
 }
+
+@keyframes project-marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-project-marquee-rtl {
+  animation: project-marquee-rtl 45s linear infinite;
+}

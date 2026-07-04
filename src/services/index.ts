@@ -1,29 +1,9 @@
 import { prisma } from "@/lib/prisma";
 
+export { galleryService } from "@/services/gallery.service";
 export { heroService } from "@/services/hero.service";
 export { homeVideoService } from "@/services/home-video.service";
-
-export const projectService = {
-  listPublished: () =>
-    prisma.project.findMany({
-      where: { isPublished: true },
-      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-      include: { images: { orderBy: { order: "asc" } } },
-    }),
-  getBySlug: (slug: string) =>
-    prisma.project.findUnique({
-      where: { slug },
-      include: { images: { orderBy: { order: "asc" } } },
-    }),
-};
-
-export const galleryService = {
-  listCollections: () =>
-    prisma.galleryCollection.findMany({
-      orderBy: { order: "asc" },
-      include: { images: { orderBy: { order: "asc" } } },
-    }),
-};
+export { projectService } from "@/services/project.service";
 
 export const staticPageService = {
   getBySlug: (slug: string) => prisma.staticPage.findUnique({ where: { slug } }),

@@ -1,23 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  HERO_CONTENT_OFFSET_CLASS,
-  HERO_MIN_HEIGHT_CLASS,
-} from "@/lib/nav-layout";
-import { websiteRoutes } from "@/lib/routes";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { HERO_MIN_HEIGHT_CLASS } from "@/lib/nav-layout";
 
 export type HeroSlideData = {
   id: string;
-  title: string;
-  subtitle: string | null;
-  description: string | null;
   imageUrl: string;
-  buttonText: string | null;
-  buttonLink: string | null;
 };
 
 type HeroCarouselProps = {
@@ -53,15 +43,13 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
     return null;
   }
 
-  const slide = slides[index];
-
   return (
     <section
       className={`relative overflow-hidden ${HERO_MIN_HEIGHT_CLASS}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
-      aria-label="Homepage hero slides"
+      aria-label="Homepage hero images"
     >
       {slides.map((item, slideIndex) => (
         <div
@@ -74,7 +62,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
         >
           <Image
             src={item.imageUrl}
-            alt={item.title}
+            alt=""
             fill
             priority={slideIndex === 0}
             sizes="100vw"
@@ -82,41 +70,6 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           />
         </div>
       ))}
-
-      <div
-        className={`relative mx-auto flex max-w-7xl items-center px-4 pb-16 sm:px-6 lg:px-8 ${HERO_MIN_HEIGHT_CLASS} ${HERO_CONTENT_OFFSET_CLASS}`}
-      >
-        <div className="max-w-2xl text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.75)]">
-          {slide.subtitle ? (
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              {slide.subtitle}
-            </p>
-          ) : null}
-          <h1 className="mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            {slide.title}
-          </h1>
-          {slide.description ? (
-            <p className="mt-5 text-base leading-7 text-white/85 sm:text-lg">
-              {slide.description}
-            </p>
-          ) : null}
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href={slide.buttonLink || websiteRoutes.contact}
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground shadow-lg transition hover:bg-accent-light"
-            >
-              {slide.buttonText || "Start Donating"}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href={websiteRoutes.projects}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
-              Our Projects
-            </Link>
-          </div>
-        </div>
-      </div>
 
       {total > 1 ? (
         <>

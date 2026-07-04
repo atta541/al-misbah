@@ -28,23 +28,16 @@ model Admin {
 ////////////////////////////////////////////////////////////
 ///
 /// HERO SLIDES
-/// Images shown inside the homepage carousel.
-/// Supports multiple slides with title, subtitle and button.
+/// Full-bleed images shown in the homepage carousel.
+/// Image-only — no text overlay on the public site.
 ///
 ////////////////////////////////////////////////////////////
 
 model HeroSlide {
   id String @id @default(cuid())
 
-  title       String
-  subtitle    String?
-  description String?
-
   imageUrl String
   imagePublicId String?
-
-  buttonText String?
-  buttonLink String?
 
   order Int @default(0)
 
@@ -105,6 +98,10 @@ model Project {
 
   featuredImage String
 
+  featuredImagePublicId String?
+
+  currency String @default("PKR")
+
   location String?
 
   startDate DateTime?
@@ -117,7 +114,11 @@ model Project {
 
   order Int @default(0)
 
-  images ProjectImage[]
+  categories    ProjectCategory[]
+  beneficiaries ProjectBeneficiary[]
+  images        ProjectImage[]
+  faqs          ProjectFaq[]
+  donations     ProjectDonation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +137,8 @@ model ProjectImage {
 
   imageUrl String
 
+  imagePublicId String?
+
   caption String?
 
   order Int @default(0)
@@ -147,6 +150,134 @@ model ProjectImage {
   createdAt DateTime @default(now())
 
   @@index([projectId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECT CATEGORIES
+/// Donation tiers / options per project.
+///
+////////////////////////////////////////////////////////////
+
+model ProjectCategory {
+  id String @id @default(cuid())
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  name String
+
+  description String?
+
+  price Decimal @db.Decimal(12, 2)
+
+  priceTo Decimal? @db.Decimal(12, 2)
+
+  order Int @default(0)
+
+  isActive Boolean @default(true)
+
+  donations ProjectDonation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECT BENEFICIARIES
+/// Impact cards shown on project detail pages.
+///
+////////////////////////////////////////////////////////////
+
+model ProjectBeneficiary {
+  id String @id @default(cuid())
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  title String
+
+  description String?
+
+  icon String?
+
+  order Int @default(0)
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECT FAQ
+/// Frequently asked questions per project.
+///
+////////////////////////////////////////////////////////////
+
+model ProjectFaq {
+  id String @id @default(cuid())
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  question String
+
+  answer String @db.Text
+
+  order Int @default(0)
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+////////////////////////////////////////////////////////////
+///
+/// PROJECT DONATIONS
+/// Donation form submissions per project category.
+///
+////////////////////////////////////////////////////////////
+
+model ProjectDonation {
+  id String @id @default(cuid())
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  categoryId String
+
+  category ProjectCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  fullName String
+
+  email String
+
+  phone String?
+
+  amount Decimal? @db.Decimal(12, 2)
+
+  message String?
+
+  status String @default("pending")
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([categoryId])
 }
 
 ////////////////////////////////////////////////////////////
@@ -171,6 +302,8 @@ model GalleryCollection {
 
   coverImage String?
 
+  coverImagePublicId String?
+
   order Int @default(0)
 
   images GalleryImage[]
@@ -191,6 +324,8 @@ model GalleryImage {
   id String @id @default(cuid())
 
   imageUrl String
+
+  imagePublicId String?
 
   caption String?
 

@@ -13,4 +13,6 @@ export const HERO_CONTENT_OFFSET_CLASS = "pt-[var(--hero-content-top)]";
 export const HERO_MIN_HEIGHT_CLASS =
   "min-h-[calc(100svh-var(--nav-top-bar-height))]";
 
-export const SITE_HEADER_OFFSET_CLASS = "pt-[var(--site-header-offset)]";
+/** Top padding so page text clears the overlapping main navbar. */
+export const PAGE_CONTENT_OFFSET_CLASS =
+  "pt-[calc(var(--nav-main-overlap)+1.5rem)]";

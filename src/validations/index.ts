@@ -9,12 +9,7 @@ export type ContactMessageInput = {
 export type { AdminLoginInput } from "./auth";
 
 export type HeroSlideInput = {
-  title: string;
-  subtitle?: string;
-  description?: string;
   imageUrl: string;
-  buttonText?: string;
-  buttonLink?: string;
   order?: number;
   isActive?: boolean;
 };

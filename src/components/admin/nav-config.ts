@@ -31,7 +31,7 @@ export const adminNavItems: AdminNavItem[] = [
     href: adminRoutes.hero,
     label: "Hero",
     title: "Hero Slides",
-    description: "Manage homepage carousel slides and call-to-action buttons.",
+    description: "Manage homepage hero carousel images.",
     icon: IconHero,
   },
   {

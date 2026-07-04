@@ -1,13 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
 export type HeroSlideInput = {
-  title: string;
-  subtitle?: string | null;
-  description?: string | null;
   imageUrl: string;
   imagePublicId?: string | null;
-  buttonText?: string | null;
-  buttonLink?: string | null;
   order?: number;
   isActive?: boolean;
 };

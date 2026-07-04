@@ -1,3 +1,5 @@
+import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
+
 type PageShellProps = {
   title: string;
   description?: string;
@@ -6,7 +8,9 @@ type PageShellProps = {
 
 export function PageShell({ title, description, children }: PageShellProps) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+    <section
+      className={`mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6 ${PAGE_CONTENT_OFFSET_CLASS}`}
+    >
       <div className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
           Al-Misbah Center

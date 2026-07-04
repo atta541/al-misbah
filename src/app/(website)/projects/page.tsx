@@ -1,10 +1,40 @@
-import { PageShell } from "@/components/shared/page-shell";
+import { ProjectCard } from "@/components/website/project-card";
+import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
+import { projectService } from "@/services/project.service";
 
-export default function ProjectsPage() {
+export const revalidate = 3600;
+
+export default async function ProjectsPage() {
+  const projects = await projectService.listPublished();
+
   return (
-    <PageShell
-      title="Projects"
-      description="Public listing of NGO projects from the Project model."
-    />
+    <section className={`bg-white pb-14 sm:pb-20 ${PAGE_CONTENT_OFFSET_CLASS}`}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
+            Our Initiatives
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Building Better Lives Together
+          </h1>
+          <p className="mt-4 text-base leading-7 text-muted">
+            Browse our projects and choose a donation option that matches how
+            you want to help.
+          </p>
+        </div>
+
+        {projects.length === 0 ? (
+          <div className="mt-10 rounded-2xl border border-dashed border-border bg-surface-muted p-10 text-center text-sm text-muted">
+            Projects will appear here once published from the admin panel.
+          </div>
+        ) : (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

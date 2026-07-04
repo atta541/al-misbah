@@ -24,11 +24,6 @@ function revalidateHeroPages() {
 
 function parseHeroForm(formData: FormData) {
   return heroSlideSchema.safeParse({
-    title: formData.get("title"),
-    subtitle: formData.get("subtitle") || undefined,
-    description: formData.get("description") || undefined,
-    buttonText: formData.get("buttonText") || undefined,
-    buttonLink: formData.get("buttonLink") || undefined,
     isActive: formData.get("isActive") === "on",
   });
 }
@@ -70,7 +65,6 @@ export async function createHeroSlide(
     const order = await heroService.getNextOrder();
 
     await heroService.create({
-      ...parsed.data,
       imageUrl: image.url,
       imagePublicId: image.publicId,
       order,
@@ -119,7 +113,6 @@ export async function updateHeroSlide(
     }
 
     await heroService.update(id, {
-      ...parsed.data,
       imageUrl,
       imagePublicId,
       isActive: parsed.data.isActive ?? true,

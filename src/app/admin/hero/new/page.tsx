@@ -5,7 +5,7 @@ import { adminRoutes } from "@/lib/routes";
 
 export default function AdminHeroNewPage() {
   return (
-    <AdminPageShell description="Upload a homepage slide with image, title, and call-to-action.">
+    <AdminPageShell description="Upload a homepage hero image.">
       <div className="mb-5">
         <Link
           href={adminRoutes.hero}

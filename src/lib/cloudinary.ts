@@ -41,6 +41,8 @@ function ensureCloudinaryConfig() {
 export type UploadedImage = {
   url: string;
   publicId: string;
+  width?: number;
+  height?: number;
 };
 
 export type UploadedVideo = {
@@ -63,7 +65,26 @@ function buildVideoThumbnailUrl(publicId: string) {
   });
 }
 
-export async function uploadHeroImage(file: File): Promise<UploadedImage> {
+function getProjectBaseFolder() {
+  return process.env.CLOUDINARY_PROJECT_FOLDER ?? "almisbah/projects";
+}
+
+function getGalleryBaseFolder() {
+  return process.env.CLOUDINARY_GALLERY_FOLDER ?? "almisbah/gallery";
+}
+
+export function getGalleryCloudinaryFolder(slug: string, type: "cover" | "images") {
+  return `${getGalleryBaseFolder()}/${slug}/${type}`;
+}
+
+export function getProjectCloudinaryFolder(slug: string, type: "featured" | "gallery") {
+  return `${getProjectBaseFolder()}/${slug}/${type}`;
+}
+
+async function uploadImageToFolder(
+  file: File,
+  folder: string,
+): Promise<UploadedImage> {
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
     throw new Error("Only JPG, PNG, WEBP, or AVIF images are allowed.");
   }
@@ -77,14 +98,13 @@ export async function uploadHeroImage(file: File): Promise<UploadedImage> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const result = await new Promise<UploadedImage>((resolve, reject) => {
+  return new Promise<UploadedImage>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: getHeroFolder(),
+        folder,
         resource_type: "image",
         unique_filename: true,
         overwrite: false,
-        transformation: [{ quality: "auto", fetch_format: "auto" }],
       },
       (error, uploadResult) => {
         if (error || !uploadResult) {
@@ -95,14 +115,64 @@ export async function uploadHeroImage(file: File): Promise<UploadedImage> {
         resolve({
           url: uploadResult.secure_url,
           publicId: uploadResult.public_id,
+          width: uploadResult.width,
+          height: uploadResult.height,
         });
       },
     );
 
     stream.end(buffer);
   });
+}
 
-  return result;
+export async function uploadProjectFeaturedImage(file: File, slug: string) {
+  return uploadImageToFolder(file, getProjectCloudinaryFolder(slug, "featured"));
+}
+
+export async function uploadProjectGalleryImage(file: File, slug: string) {
+  return uploadImageToFolder(file, getProjectCloudinaryFolder(slug, "gallery"));
+}
+
+export async function uploadGalleryCoverImage(file: File, slug: string) {
+  return uploadImageToFolder(file, getGalleryCloudinaryFolder(slug, "cover"));
+}
+
+export async function uploadGalleryImage(file: File, slug: string) {
+  return uploadImageToFolder(file, getGalleryCloudinaryFolder(slug, "images"));
+}
+
+const DEFAULT_UPLOAD_CONCURRENCY = 4;
+
+export async function uploadFilesConcurrent<T>(
+  items: T[],
+  upload: (item: T) => Promise<UploadedImage>,
+  concurrency = DEFAULT_UPLOAD_CONCURRENCY,
+): Promise<UploadedImage[]> {
+  if (items.length === 0) return [];
+
+  const results = new Array<UploadedImage>(items.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await upload(items[currentIndex]);
+    }
+  }
+
+  await Promise.all(
+    Array.from(
+      { length: Math.min(concurrency, items.length) },
+      () => worker(),
+    ),
+  );
+
+  return results;
+}
+
+export async function uploadHeroImage(file: File): Promise<UploadedImage> {
+  return uploadImageToFolder(file, getHeroFolder());
 }
 
 export async function uploadHomeVideo(file: File): Promise<UploadedVideo> {
@@ -166,6 +236,34 @@ export async function uploadHomeVideo(file: File): Promise<UploadedVideo> {
   });
 
   return result;
+}
+
+import type { SignedUploadParams } from "@/lib/gallery-upload-client";
+
+export function createSignedUploadParams(folder: string): SignedUploadParams {
+  ensureCloudinaryConfig();
+
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error("Cloudinary is not configured.");
+  }
+
+  const timestamp = Math.round(Date.now() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    { folder, timestamp },
+    apiSecret,
+  );
+
+  return {
+    cloudName,
+    apiKey,
+    timestamp,
+    signature,
+    folder,
+  };
 }
 
 export async function deleteCloudinaryImage(publicId?: string | null) {
