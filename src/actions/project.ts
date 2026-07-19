@@ -33,6 +33,7 @@ function parseOptionalDate(value: FormDataEntryValue | null) {
 function revalidateProjectPages(slug?: string) {
   revalidatePath(websiteRoutes.home);
   revalidatePath(websiteRoutes.projects);
+  revalidatePath("/", "layout");
   if (slug) {
     revalidatePath(`${websiteRoutes.projects}/${slug}`);
   }

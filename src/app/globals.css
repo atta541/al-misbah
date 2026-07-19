@@ -69,3 +69,17 @@ body {
 .animate-project-marquee-rtl {
   animation: project-marquee-rtl 45s linear infinite;
 }
+
+@keyframes collaborations-marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-collaborations-marquee-rtl {
+  animation: collaborations-marquee-rtl 55s linear infinite;
+}

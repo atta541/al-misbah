@@ -35,6 +35,7 @@ export function GalleryMasonry({ images, collectionTitle }: GalleryMasonryProps)
             <button
               key={image.id}
               type="button"
+              data-gallery-tile
               onClick={() => setActiveIndex(index)}
               className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-border/70 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand/20 hover:shadow-md"
             >

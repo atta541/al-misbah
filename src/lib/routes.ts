@@ -4,6 +4,8 @@ export const websiteRoutes = {
   gallery: "/gallery",
   about: "/about",
   contact: "/contact",
+  donate: "/donate",
+  checkout: "/checkout",
   privacyPolicy: "/privacy-policy",
   terms: "/terms",
 } as const;
@@ -18,4 +20,5 @@ export const adminRoutes = {
   pages: "/admin/pages",
   settings: "/admin/settings",
   messages: "/admin/messages",
+  leads: "/admin/leads",
 } as const;

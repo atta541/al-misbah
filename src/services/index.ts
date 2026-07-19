@@ -27,7 +27,7 @@ export const siteSettingsService = {
     return prisma.siteSettings.create({
       data: {
         websiteName: "Al-Misbah Center",
-        themePreset: "emerald-trust",
+        themePreset: "slate-clarity",
       },
     });
   },
@@ -46,6 +46,33 @@ export const siteSettingsService = {
       data: {
         websiteName: "Al-Misbah Center",
         themePreset,
+      },
+    });
+  },
+
+  updateTheme: async (
+    themePreset: string,
+    themeCustom?: Record<string, string> | null,
+  ) => {
+    const existing = await prisma.siteSettings.findFirst();
+    const data = {
+      themePreset,
+      ...(themeCustom !== undefined
+        ? { themeCustom: themeCustom ?? undefined }
+        : {}),
+    };
+
+    if (existing) {
+      return prisma.siteSettings.update({
+        where: { id: existing.id },
+        data,
+      });
+    }
+
+    return prisma.siteSettings.create({
+      data: {
+        websiteName: "Al-Misbah Center",
+        ...data,
       },
     });
   },

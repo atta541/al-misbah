@@ -9,12 +9,15 @@ export default async function ProjectsPage() {
 
   return (
     <section className={`bg-white pb-14 sm:pb-20 ${PAGE_CONTENT_OFFSET_CLASS}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
-            Our Initiatives
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+      <div className="mx-auto max-w-[90rem] px-3 sm:px-5 lg:px-6">
+        <div className="mx-auto max-w-3xl text-center sm:text-left">
+          <div className="flex items-center justify-center gap-4 sm:justify-start">
+            <span className="hidden h-px w-12 bg-accent sm:block" />
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
+              Our Initiatives
+            </p>
+          </div>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">
             Building Better Lives Together
           </h1>
           <p className="mt-4 text-base leading-7 text-muted">
@@ -28,7 +31,7 @@ export default async function ProjectsPage() {
             Projects will appear here once published from the admin panel.
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 xl:gap-8">
             {projects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}

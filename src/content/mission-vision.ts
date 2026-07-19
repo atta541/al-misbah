@@ -1,33 +1,21 @@
-import { Eye, Target } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-export type MissionVisionCard = {
+export type MissionVisionBlock = {
   id: string;
+  label: string;
   title: string;
-  description: string;
-  icon: LucideIcon;
+  body: string;
 };
 
-export const missionVisionCards: MissionVisionCard[] = [
+export const missionVisionBlocks: MissionVisionBlock[] = [
   {
     id: "mission",
-    title: "Our Mission",
-    description:
-      "To serve communities with compassion and integrity by delivering humanitarian aid, education, and sustainable development programs that uplift the most vulnerable and create lasting positive change.",
-    icon: Target,
+    label: "Mission",
+    title: "Serve first. Prove every step.",
+    body: "We put aid, education, and community support where the need is clearest — and we keep the work transparent so donors can see what their support actually does.",
   },
   {
     id: "vision",
-    title: "Our Vision",
-    description:
-      "A society where every person has access to dignity, opportunity, and hope — supported by transparent charity work, accountable partnerships, and a culture of verifiable impact.",
-    icon: Eye,
+    label: "Vision",
+    title: "Dignity should not be rare.",
+    body: "We work toward communities where families can stand on firmer ground: fed, taught, and treated with respect — not as a favor, but as a standard.",
   },
 ];
-
-export const missionVisionSection = {
-  eyebrow: "Who We Are",
-  heading: "Guided by purpose, driven by impact",
-  description:
-    "Al-Misbah Center is committed to humanitarian work rooted in trust, transparency, and service to those who need it most.",
-} as const;

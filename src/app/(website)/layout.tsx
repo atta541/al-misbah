@@ -15,7 +15,10 @@ export default async function WebsiteLayout({
 
   return (
     <div className="website flex min-h-screen flex-col">
-      <DynamicWebsiteTheme themePreset={settings.themePreset} />
+      <DynamicWebsiteTheme
+        themePreset={settings.themePreset}
+        themeCustom={settings.themeCustom}
+      />
       <Suspense fallback={<NavbarFallback />}>
         <WebsiteNavbarServer />
       </Suspense>

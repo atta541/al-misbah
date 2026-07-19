@@ -1,8 +1,11 @@
 import { WebsiteNavbar } from "@/components/website/navbar";
-import { siteSettingsService } from "@/services";
+import { projectService, siteSettingsService } from "@/services";
 
 export async function WebsiteNavbarServer() {
-  const settings = await siteSettingsService.getOrCreate();
+  const [settings, projects] = await Promise.all([
+    siteSettingsService.getOrCreate(),
+    projectService.listForNav(),
+  ]);
 
   return (
     <WebsiteNavbar
@@ -16,6 +19,7 @@ export async function WebsiteNavbarServer() {
         instagram: settings.instagram,
         youtube: settings.youtube,
       }}
+      projects={projects}
     />
   );
 }

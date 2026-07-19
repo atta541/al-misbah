@@ -246,10 +246,18 @@ model ProjectFaq {
 
 ////////////////////////////////////////////////////////////
 ///
-/// PROJECT DONATIONS
-/// Donation form submissions per project category.
+/// PROJECT DONATIONS / CHECKOUT LEADS
+/// Checkout form submissions per project category.
 ///
 ////////////////////////////////////////////////////////////
+
+enum CheckoutLeadStatus {
+  pending
+  contacted
+  confirmed
+  completed
+  cancelled
+}
 
 model ProjectDonation {
   id String @id @default(cuid())
@@ -268,16 +276,22 @@ model ProjectDonation {
 
   phone String?
 
+  quantity Int @default(1)
+
   amount Decimal? @db.Decimal(12, 2)
 
   message String?
 
-  status String @default("pending")
+  status CheckoutLeadStatus @default(pending)
 
   createdAt DateTime @default(now())
 
+  updatedAt DateTime @updatedAt
+
   @@index([projectId])
   @@index([categoryId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 ////////////////////////////////////////////////////////////
@@ -417,7 +431,10 @@ model SiteSettings {
 
   copyrightText String?
 
-  themePreset String @default("emerald-trust")
+  themePreset String @default("slate-clarity")
+
+  /// Custom theme color tokens (JSON). Used when themePreset = "custom".
+  themeCustom Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

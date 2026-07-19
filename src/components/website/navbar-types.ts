@@ -8,3 +8,11 @@ export type NavbarSettings = {
   instagram?: string | null;
   youtube?: string | null;
 };
+
+export type NavProject = {
+  id: string;
+  title: string;
+  slug: string;
+  featuredImage: string;
+  shortDescription: string;
+};

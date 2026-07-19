@@ -7,18 +7,21 @@
  * `website-theme.css` keeps fallback colors for first load / dev only.
  */
 export const WEBSITE_THEME = {
-  id: "emerald-trust",
-  name: "Emerald Trust",
+  id: "slate-clarity",
+  name: "Slate Clarity",
   description:
-    "Deep green with warm gold accents — trustworthy, calm, and suited for NGO work.",
+    "Cool slate with sky accents — clean, modern, and easy on the eyes.",
 } as const;
 
 export type WebsiteThemeId =
-  | "emerald-trust"
-  | "navy-hope"
-  | "sage-community"
-  | "teal-light"
-  | "burgundy-dignity";
+  | "slate-clarity"
+  | "ink-copper"
+  | "ocean-rose"
+  | "graphite-blush"
+  | "clay-horizon"
+  | "midnight-linen"
+  | "arctic-ember"
+  | "custom";
 
 export const WEBSITE_THEME_PRESETS: Array<{
   id: WebsiteThemeId;
@@ -26,29 +29,44 @@ export const WEBSITE_THEME_PRESETS: Array<{
   description: string;
 }> = [
   {
-    id: "emerald-trust",
-    name: "Emerald Trust",
-    description: "Deep green + gold on warm cream",
+    id: "slate-clarity",
+    name: "Slate Clarity",
+    description: "Cool slate + sky blue on crisp white",
   },
   {
-    id: "navy-hope",
-    name: "Navy Hope",
-    description: "Navy blue + bright blue accent",
+    id: "ink-copper",
+    name: "Ink & Copper",
+    description: "Near-black ink with warm copper highlights",
   },
   {
-    id: "sage-community",
-    name: "Sage Community",
-    description: "Earthy sage green + amber accent",
+    id: "ocean-rose",
+    name: "Ocean Rose",
+    description: "Deep ocean blue with soft rose accents",
   },
   {
-    id: "teal-light",
-    name: "Teal Light",
-    description: "Fresh teal + amber on white",
+    id: "graphite-blush",
+    name: "Graphite Blush",
+    description: "Charcoal graphite with dusty blush",
   },
   {
-    id: "burgundy-dignity",
-    name: "Burgundy Dignity",
-    description: "Burgundy + gold on cream",
+    id: "clay-horizon",
+    name: "Clay Horizon",
+    description: "Warm clay brown with soft horizon blue",
+  },
+  {
+    id: "midnight-linen",
+    name: "Midnight Linen",
+    description: "Midnight indigo with linen sand accents",
+  },
+  {
+    id: "arctic-ember",
+    name: "Arctic Ember",
+    description: "Cool charcoal with ember orange accents",
+  },
+  {
+    id: "custom",
+    name: "Custom colors",
+    description: "Pick your own hex / RGB colors below",
   },
 ];
 
@@ -60,3 +78,10 @@ export {
   websiteThemePresets,
   type WebsiteThemeTokens,
 } from "./presets";
+
+export {
+  buildTokensFromCustomColors,
+  getDefaultCustomColors,
+  parseCustomThemeColors,
+  type CustomThemeColors,
+} from "./custom-theme";

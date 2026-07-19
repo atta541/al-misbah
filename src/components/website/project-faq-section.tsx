@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getGsap } from "@/lib/gsap";
 import type { ProjectFaq } from "@/types";
 
 type ProjectFaqSectionProps = {
@@ -10,14 +11,53 @@ type ProjectFaqSectionProps = {
 
 export function ProjectFaqSection({ faqs }: ProjectFaqSectionProps) {
   const [openId, setOpenId] = useState<string | null>(faqs[0]?.id ?? null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || faqs.length === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const { gsap } = getGsap();
+    const header = section.querySelector<HTMLElement>("[data-section-header]");
+    const items = section.querySelectorAll<HTMLElement>("[data-faq-item]");
+    const targets = [
+      ...(header ? Array.from(header.children) : []),
+      ...Array.from(items),
+    ];
+
+    if (targets.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        targets,
+        { autoAlpha: 0, y: 24 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.65,
+          ease: "power3.out",
+          stagger: 0.07,
+          clearProps: "opacity,visibility,transform",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 90%",
+            once: true,
+          },
+        },
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, [faqs]);
 
   if (faqs.length === 0) {
     return null;
   }
 
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="mx-auto max-w-4xl text-center">
+    <section ref={sectionRef} className="mt-16 sm:mt-20">
+      <div data-section-header className="mx-auto max-w-4xl text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
           FAQ
         </p>
@@ -33,6 +73,7 @@ export function ProjectFaqSection({ faqs }: ProjectFaqSectionProps) {
           return (
             <div
               key={faq.id}
+              data-faq-item
               className={[
                 "overflow-hidden rounded-2xl border bg-white transition-all duration-300",
                 isOpen
@@ -66,8 +107,8 @@ export function ProjectFaqSection({ faqs }: ProjectFaqSectionProps) {
 
               <div
                 className={[
-                  "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
-                  isOpen ? "opacity-100" : "opacity-0",
+                  "grid transition-[grid-template-rows] duration-300 ease-out",
+                  isOpen ? "" : "",
                 ].join(" ")}
                 style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
               >

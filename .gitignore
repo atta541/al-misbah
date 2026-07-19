@@ -45,3 +45,7 @@ next-env.d.ts
 /prisma/generated
 
 /prisma/generated/prisma
+
+PLAN-CHECKOUT-LEADS.md
+PLAN-GEOGRAPHICAL-COVERAGE.md
+PLAN-OUR-IMPACT.md

@@ -1,20 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, X } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, ChevronDown, X } from "lucide-react";
 import {
   isNavItemActive,
   websiteNavItems,
 } from "@/components/website/nav-config";
+import type { NavProject } from "@/components/website/navbar-types";
 import { websiteRoutes } from "@/lib/routes";
 
 type NavbarDrawerProps = {
   open: boolean;
   pathname: string;
+  projects: NavProject[];
   onClose: () => void;
 };
 
-export function NavbarDrawer({ open, pathname, onClose }: NavbarDrawerProps) {
+export function NavbarDrawer({
+  open,
+  pathname,
+  projects,
+  onClose,
+}: NavbarDrawerProps) {
+  const [projectsOpen, setProjectsOpen] = useState(true);
+
   return (
     <>
       <button
@@ -52,6 +62,81 @@ export function NavbarDrawer({ open, pathname, onClose }: NavbarDrawerProps) {
           {websiteNavItems.map((item) => {
             const active = isNavItemActive(pathname, item);
 
+            if (item.href === websiteRoutes.projects) {
+              return (
+                <div key={item.href} className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1">
+                    <Link
+                      href={item.href}
+                      onClick={onClose}
+                      className={[
+                        "flex-1 rounded-xl px-4 py-3 text-base font-medium transition",
+                        active
+                          ? "bg-white/10 text-accent"
+                          : "text-white/85 hover:bg-white/5 hover:text-white",
+                      ].join(" ")}
+                    >
+                      {item.label}
+                    </Link>
+                    <button
+                      type="button"
+                      aria-label={
+                        projectsOpen ? "Collapse projects" : "Expand projects"
+                      }
+                      aria-expanded={projectsOpen}
+                      onClick={() => setProjectsOpen((value) => !value)}
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/80 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <ChevronDown
+                        className={[
+                          "h-4 w-4 transition-transform duration-200",
+                          projectsOpen ? "rotate-180" : "",
+                        ].join(" ")}
+                      />
+                    </button>
+                  </div>
+
+                  <div
+                    className={[
+                      "grid transition-[grid-template-rows] duration-300 ease-out",
+                      projectsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                    ].join(" ")}
+                  >
+                    <div className="overflow-hidden">
+                      <ul className="mb-1 ml-2 flex flex-col gap-0.5 border-l border-white/10 pl-3">
+                        {projects.map((project) => (
+                          <li key={project.id}>
+                            <Link
+                              href={`${websiteRoutes.projects}/${project.slug}`}
+                              onClick={onClose}
+                              className={[
+                                "block truncate rounded-lg px-3 py-2 text-sm transition",
+                                pathname ===
+                                `${websiteRoutes.projects}/${project.slug}`
+                                  ? "bg-white/10 text-accent"
+                                  : "text-white/70 hover:bg-white/5 hover:text-white",
+                              ].join(" ")}
+                            >
+                              {project.title}
+                            </Link>
+                          </li>
+                        ))}
+                        <li>
+                          <Link
+                            href={websiteRoutes.projects}
+                            onClick={onClose}
+                            className="block rounded-lg px-3 py-2 text-sm font-medium text-accent/90 transition hover:bg-white/5 hover:text-accent"
+                          >
+                            View all projects
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
@@ -72,7 +157,7 @@ export function NavbarDrawer({ open, pathname, onClose }: NavbarDrawerProps) {
 
         <div className="border-t border-white/10 p-4">
           <Link
-            href={websiteRoutes.contact}
+            href={websiteRoutes.donate}
             onClick={onClose}
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/80 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-brand-dark"
           >

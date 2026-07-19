@@ -10,12 +10,16 @@ import {
   isNavItemActive,
   websiteNavItems,
 } from "@/components/website/nav-config";
+import { ProjectsNavDropdown } from "@/components/website/projects-nav-dropdown";
+import type {
+  NavbarSettings,
+  NavProject,
+} from "@/components/website/navbar-types";
 import { websiteRoutes } from "@/lib/routes";
-
-import type { NavbarSettings } from "@/components/website/navbar-types";
 
 type NavbarMainProps = {
   settings: NavbarSettings;
+  projects: NavProject[];
 };
 
 function navLinkClass(active: boolean) {
@@ -27,7 +31,7 @@ function navLinkClass(active: boolean) {
   ].join(" ");
 }
 
-export function NavbarMain({ settings }: NavbarMainProps) {
+export function NavbarMain({ settings, projects }: NavbarMainProps) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -44,9 +48,8 @@ export function NavbarMain({ settings }: NavbarMainProps) {
 
   return (
     <>
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-between gap-3 rounded-2xl rounded-bl-[1.75rem] rounded-tr-[1.75rem] bg-brand-dark px-3 py-3 shadow-lg shadow-black/10 sm:gap-4 sm:px-4 lg:py-0">
+      <div className="mx-auto w-full max-w-[90rem]">
+          <div className="flex items-center justify-between gap-3 rounded-2xl rounded-bl-[1.75rem] rounded-tr-[1.75rem] bg-brand-dark px-3 py-3 shadow-lg shadow-black/10 sm:gap-4 sm:px-5 lg:px-6 lg:py-0">
             <Link href={websiteRoutes.home} className="relative z-10 shrink-0">
               <div className="flex min-h-[4.25rem] min-w-[5rem] items-center justify-center rounded-2xl bg-white px-3 py-2.5 shadow-md sm:min-h-[4.75rem] sm:min-w-[6rem] sm:px-4">
                 {settings.logoUrl ? (
@@ -71,20 +74,34 @@ export function NavbarMain({ settings }: NavbarMainProps) {
             </Link>
 
             <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
-              {websiteNavItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={navLinkClass(isNavItemActive(pathname, item))}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {websiteNavItems.map((item) => {
+                const active = isNavItemActive(pathname, item);
+
+                if (item.href === websiteRoutes.projects) {
+                  return (
+                    <ProjectsNavDropdown
+                      key={item.href}
+                      projects={projects}
+                      linkClassName={navLinkClass(active)}
+                    />
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={navLinkClass(active)}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="flex items-center gap-2">
               <Link
-                href={websiteRoutes.contact}
+                href={websiteRoutes.donate}
                 className="hidden items-center gap-2 rounded-xl border border-white/80 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-brand-dark sm:inline-flex"
               >
                 Donate now
@@ -103,11 +120,11 @@ export function NavbarMain({ settings }: NavbarMainProps) {
             </div>
           </div>
         </div>
-      </div>
 
       <NavbarDrawer
         open={drawerOpen}
         pathname={pathname}
+        projects={projects}
         onClose={() => setDrawerOpen(false)}
       />
     </>

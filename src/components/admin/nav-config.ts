@@ -3,6 +3,7 @@ import {
   IconDashboard,
   IconGallery,
   IconHero,
+  IconLeads,
   IconMessages,
   IconPages,
   IconProjects,
@@ -76,6 +77,14 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Contact Messages",
     description: "Read and manage inquiries submitted from the contact form.",
     icon: IconMessages,
+  },
+  {
+    href: adminRoutes.leads,
+    label: "Leads",
+    title: "Checkout Leads",
+    description:
+      "Review checkout requests and update lead statuses from project contributions.",
+    icon: IconLeads,
   },
 ];
 

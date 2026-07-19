@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import {
   Baby,
   Droplets,
@@ -11,6 +14,7 @@ import {
   Utensils,
   type LucideIcon,
 } from "lucide-react";
+import { getGsap } from "@/lib/gsap";
 import type { ProjectBeneficiary } from "@/types";
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -36,13 +40,53 @@ type ProjectBeneficiariesSectionProps = {
 export function ProjectBeneficiariesSection({
   beneficiaries,
 }: ProjectBeneficiariesSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || beneficiaries.length === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const { gsap } = getGsap();
+    const header = section.querySelector<HTMLElement>("[data-section-header]");
+    const cards = section.querySelectorAll<HTMLElement>("[data-benefit-card]");
+    const targets = [
+      ...(header ? Array.from(header.children) : []),
+      ...Array.from(cards),
+    ];
+
+    if (targets.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        targets,
+        { autoAlpha: 0, y: 28 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.08,
+          clearProps: "opacity,visibility,transform",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, [beneficiaries]);
+
   if (beneficiaries.length === 0) {
     return null;
   }
 
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="mx-auto max-w-3xl text-center">
+    <section ref={sectionRef} className="mt-16 sm:mt-20">
+      <div data-section-header className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
           Impact
         </p>
@@ -61,6 +105,7 @@ export function ProjectBeneficiariesSection({
           return (
             <article
               key={item.id}
+              data-benefit-card
               className="group relative overflow-hidden rounded-[1.5rem] border border-border/70 bg-white p-6 text-center shadow-[0_16px_40px_-28px_rgba(15,92,76,0.4)] transition duration-300 hover:-translate-y-1 hover:border-brand/20 sm:p-7"
             >
               <div

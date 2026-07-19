@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getGsap } from "@/lib/gsap";
 import type { ProjectImage } from "@/types";
 
 type ProjectGalleryCarouselProps = {
@@ -14,6 +15,45 @@ export function ProjectGalleryCarousel({
   projectTitle,
 }: ProjectGalleryCarouselProps) {
   const [paused, setPaused] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || images.length === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const { gsap } = getGsap();
+    const header = section.querySelector<HTMLElement>("[data-section-header]");
+    const track = section.querySelector<HTMLElement>("[data-gallery-track]");
+    const targets = [
+      ...(header ? Array.from(header.children) : []),
+      ...(track ? [track] : []),
+    ];
+
+    if (targets.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        targets,
+        { autoAlpha: 0, y: 28 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.1,
+          clearProps: "opacity,visibility,transform",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, [images]);
 
   if (images.length === 0) {
     return null;
@@ -22,8 +62,8 @@ export function ProjectGalleryCarousel({
   const loopImages = [...images, ...images];
 
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="mx-auto max-w-3xl text-center">
+    <section ref={sectionRef} className="mt-16 sm:mt-20">
+      <div data-section-header className="mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-bold tracking-tight text-brand sm:text-4xl lg:text-5xl">
           Gallery
         </h2>
@@ -33,6 +73,7 @@ export function ProjectGalleryCarousel({
       </div>
 
       <div
+        data-gallery-track
         className="relative mt-8 overflow-hidden"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}

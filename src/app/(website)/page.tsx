@@ -1,3 +1,4 @@
+import { HomeCollaborationsSection } from "@/components/website/home-collaborations-section";
 import { HomeFeaturedProjectsSection } from "@/components/website/home-featured-projects";
 import { HomeGoogleReviewsSection } from "@/components/website/home-google-reviews-section";
 import { HomeHeroSection } from "@/components/website/home-hero-section";
@@ -21,6 +22,7 @@ export default async function HomePage() {
       <HomeHeroSection slides={slides} />
       <HomeVideoSection video={video} />
       <HomeMissionVisionSection />
+      <HomeCollaborationsSection />
       <HomeFeaturedProjectsSection projects={featuredProjects} />
       <HomeGoogleReviewsSection />
     </>

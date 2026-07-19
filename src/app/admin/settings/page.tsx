@@ -26,7 +26,10 @@ export default async function AdminSettingsPage() {
             instantly to all visitor pages after saving.
           </p>
           <div className="mt-6">
-            <ThemePicker activeThemeId={activeThemeId} />
+            <ThemePicker
+              activeThemeId={activeThemeId}
+              initialCustomColors={settings.themeCustom}
+            />
           </div>
         </section>
 

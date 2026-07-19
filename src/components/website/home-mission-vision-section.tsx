@@ -1,63 +1,87 @@
-import {
-  missionVisionCards,
-  missionVisionSection,
-} from "@/content/mission-vision";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { missionVisionBlocks } from "@/content/mission-vision";
+import { getGsap } from "@/lib/gsap";
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
 export function HomeMissionVisionSection() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+
+    const root = rootRef.current;
+    if (!root) return;
+
+    const { gsap } = getGsap();
+    const blocks = root.querySelectorAll<HTMLElement>("[data-mv-block]");
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        blocks,
+        { autoAlpha: 0, y: 32 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.75,
+          ease: "power3.out",
+          stagger: 0.14,
+          clearProps: "opacity,visibility,transform",
+          scrollTrigger: {
+            trigger: root,
+            start: "top 80%",
+            once: true,
+          },
+        },
+      );
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  const [mission, vision] = missionVisionBlocks;
+
   return (
-    <section className="border-t border-border bg-white py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
-            {missionVisionSection.eyebrow}
+    <section
+      ref={rootRef}
+      className="border-t border-border bg-surface-muted/40 py-16 sm:py-24"
+    >
+      <div className="mx-auto grid max-w-[90rem] gap-0 px-3 sm:px-5 lg:grid-cols-2 lg:px-6">
+        <div
+          data-mv-block
+          className="border-border/80 px-2 py-2 sm:px-4 lg:border-r lg:pr-12 lg:py-4"
+        >
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+            {mission.label}
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.5rem]">
-            {missionVisionSection.heading}
+          <h2 className="mt-5 max-w-md text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]">
+            {mission.title}
           </h2>
-          <p className="mt-4 text-base leading-7 text-muted sm:text-lg">
-            {missionVisionSection.description}
+          <p className="mt-6 max-w-lg text-base leading-8 text-muted sm:text-[17px]">
+            {mission.body}
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-2 lg:gap-8">
-          {missionVisionCards.map((card, index) => {
-            const Icon = card.icon;
-
-            return (
-              <article
-                key={card.id}
-                className="group relative overflow-hidden rounded-[1.75rem] border border-border/70 bg-white p-8 shadow-[0_18px_50px_-24px_rgba(15,92,76,0.35)] transition duration-300 hover:-translate-y-1 hover:border-brand/20 hover:shadow-[0_28px_60px_-24px_rgba(15,92,76,0.28)] sm:p-10"
-              >
-                <div
-                  className={[
-                    "pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full opacity-60 blur-3xl transition duration-300 group-hover:opacity-90",
-                    index === 0 ? "bg-brand/15" : "bg-accent/20",
-                  ].join(" ")}
-                />
-
-                <div className="relative flex items-start gap-5">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-brand-light text-white shadow-lg shadow-brand/25 transition duration-300 group-hover:scale-105">
-                    <Icon className="h-7 w-7" aria-hidden />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                      {index === 0 ? "Purpose" : "Direction"}
-                    </p>
-                    <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
-                      {card.title}
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="relative mt-6 text-[15px] leading-8 text-muted">
-                  {card.description}
-                </p>
-
-                <div className="relative mt-8 h-px w-full bg-gradient-to-r from-brand/30 via-accent/40 to-transparent" />
-              </article>
-            );
-          })}
+        <div
+          data-mv-block
+          className="mt-12 border-t border-border/80 px-2 pt-12 sm:px-4 lg:mt-0 lg:border-t-0 lg:pl-12 lg:pt-4"
+        >
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+            {vision.label}
+          </p>
+          <h2 className="mt-5 max-w-md text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]">
+            {vision.title}
+          </h2>
+          <p className="mt-6 max-w-lg text-base leading-8 text-muted sm:text-[17px]">
+            {vision.body}
+          </p>
         </div>
       </div>
     </section>

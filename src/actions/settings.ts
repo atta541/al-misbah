@@ -6,6 +6,11 @@ import { getSession } from "@/lib/auth";
 import { adminRoutes, websiteRoutes } from "@/lib/routes";
 import { siteSettingsService } from "@/services";
 import { isWebsiteThemeId } from "@/theme";
+import {
+  CUSTOM_THEME_FIELDS,
+  normalizeHex,
+  type CustomThemeColors,
+} from "@/theme/custom-theme";
 
 export type ThemeUpdateState = {
   success?: boolean;
@@ -28,7 +33,29 @@ export async function updateWebsiteTheme(
     return { error: "Please select a valid theme." };
   }
 
-  await siteSettingsService.updateThemePreset(themePreset);
+  if (themePreset === "custom") {
+    const colors = {} as CustomThemeColors;
+    const missing: string[] = [];
+
+    for (const field of CUSTOM_THEME_FIELDS) {
+      const hex = normalizeHex(String(formData.get(`custom_${field.key}`) ?? ""));
+      if (!hex) {
+        missing.push(field.label);
+        continue;
+      }
+      colors[field.key] = hex;
+    }
+
+    if (missing.length > 0) {
+      return {
+        error: `Invalid color for: ${missing.join(", ")}. Use hex like #334155.`,
+      };
+    }
+
+    await siteSettingsService.updateTheme("custom", colors);
+  } else {
+    await siteSettingsService.updateTheme(themePreset);
+  }
 
   revalidatePath(websiteRoutes.home, "layout");
   revalidatePath(adminRoutes.settings);

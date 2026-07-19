@@ -71,6 +71,7 @@ export type ProjectDonationInput = {
   fullName: string;
   email: string;
   phone?: string | null;
+  quantity?: number;
   amount?: number | null;
   message?: string | null;
 };
@@ -210,6 +211,19 @@ export const projectService = {
       where: { isPublished: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
       include: publishedProjectInclude,
+    }),
+
+  listForNav: () =>
+    prisma.project.findMany({
+      where: { isPublished: true },
+      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        featuredImage: true,
+        shortDescription: true,
+      },
     }),
 
   listPublishedSlugs: () =>
@@ -368,7 +382,18 @@ export const projectService = {
     prisma.project.update({ where: { id }, data: { isPublished } }),
 
   createDonation: (data: ProjectDonationInput) =>
-    prisma.projectDonation.create({ data }),
+    prisma.projectDonation.create({
+      data: {
+        projectId: data.projectId,
+        categoryId: data.categoryId,
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone ?? null,
+        quantity: data.quantity ?? 1,
+        amount: data.amount ?? null,
+        message: data.message ?? null,
+      },
+    }),
 
   getCategoryForDonation: (categoryId: string, projectId: string) =>
     prisma.projectCategory.findFirst({
@@ -378,5 +403,56 @@ export const projectService = {
         isActive: true,
         project: { isPublished: true },
       },
+    }),
+
+  listLeads: (filters?: {
+    status?: string;
+    projectId?: string;
+    q?: string;
+  }) => {
+    const q = filters?.q?.trim();
+
+    return prisma.projectDonation.findMany({
+      where: {
+        ...(filters?.status
+          ? { status: filters.status as never }
+          : undefined),
+        ...(filters?.projectId ? { projectId: filters.projectId } : undefined),
+        ...(q
+          ? {
+              OR: [
+                { fullName: { contains: q, mode: "insensitive" } },
+                { email: { contains: q, mode: "insensitive" } },
+                { phone: { contains: q, mode: "insensitive" } },
+              ],
+            }
+          : undefined),
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        project: { select: { id: true, title: true, slug: true } },
+        category: { select: { id: true, name: true } },
+      },
+    });
+  },
+
+  getLeadById: (id: string) =>
+    prisma.projectDonation.findUnique({
+      where: { id },
+      include: {
+        project: { select: { id: true, title: true, slug: true } },
+        category: { select: { id: true, name: true, price: true, priceTo: true } },
+      },
+    }),
+
+  updateLeadStatus: (id: string, status: string) =>
+    prisma.projectDonation.update({
+      where: { id },
+      data: { status: status as never },
+    }),
+
+  countLeadsByStatus: (status: string) =>
+    prisma.projectDonation.count({
+      where: { status: status as never },
     }),
 };

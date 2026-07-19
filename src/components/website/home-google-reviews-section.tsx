@@ -1,12 +1,12 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { googleReviews, googleReviewsSection } from "@/content/google-reviews";
+import { getGsap } from "@/lib/gsap";
 
 function GoogleLogo({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden className={className}>
       <path
         fill="#4285F4"
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -31,12 +31,7 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
       {Array.from({ length: 5 }).map((_, index) => (
-        <svg
-          key={index}
-          viewBox="0 0 24 24"
-          className="h-4 w-4"
-          aria-hidden
-        >
+        <svg key={index} viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
           <path
             fill={index < rating ? "#FBBC04" : "#e5e7eb"}
             d="M12 2l2.9 6.9H22l-5.5 4.1 2.1 6.9L12 16.8 5.4 19.9l2.1-6.9L2 8.9h7.1z"
@@ -53,7 +48,10 @@ function ReviewCard({
   review: (typeof googleReviews)[number];
 }) {
   return (
-    <article className="flex h-full min-w-[280px] flex-col rounded-2xl border border-border/70 bg-white p-5 shadow-[0_14px_36px_-24px_rgba(15,92,76,0.35)] sm:min-w-0 sm:p-6">
+    <article
+      data-review-card
+      className="flex h-full min-w-[280px] flex-col rounded-2xl border border-border/70 bg-white p-5 shadow-[0_14px_36px_-24px_rgba(15,92,76,0.35)] sm:min-w-0 sm:p-6"
+    >
       <div className="flex items-start gap-3">
         <div
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
@@ -80,14 +78,77 @@ function ReviewCard({
 }
 
 export function HomeGoogleReviewsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
   const fullStars = Math.floor(googleReviewsSection.aggregateRating);
   const hasHalfStar =
     googleReviewsSection.aggregateRating - fullStars >= 0.5;
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const header = headerRef.current;
+    const summary = summaryRef.current;
+    const grid = gridRef.current;
+    if (!section || !header || !summary || !grid) return;
+
+    const { gsap } = getGsap();
+    const cards = grid.querySelectorAll<HTMLElement>("[data-review-card]");
+
+    const ctx = gsap.context(() => {
+      gsap.from(header.children, {
+        opacity: 0,
+        y: 28,
+        duration: 0.65,
+        ease: "power3.out",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: header,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      gsap.from(summary, {
+        opacity: 0,
+        y: 32,
+        scale: 0.97,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: summary,
+          start: "top 88%",
+          once: true,
+        },
+      });
+
+      gsap.from(cards, {
+        opacity: 0,
+        y: 40,
+        scale: 0.96,
+        duration: 0.65,
+        ease: "power3.out",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: grid,
+          start: "top 82%",
+          once: true,
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="border-t border-border bg-surface-muted py-16 sm:py-24 bg-white">
+    <section
+      ref={sectionRef}
+      className="border-t border-border bg-white py-16 sm:py-24"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
+        <div ref={headerRef} className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
             {googleReviewsSection.eyebrow}
           </p>
@@ -100,7 +161,10 @@ export function HomeGoogleReviewsSection() {
         </div>
 
         <div className="mx-auto mt-10 max-w-xl">
-          <div className="flex flex-col items-center gap-4 rounded-[1.5rem] border border-border/70 bg-white px-6 py-5 text-center shadow-sm sm:flex-row sm:justify-center sm:gap-6 sm:text-left">
+          <div
+            ref={summaryRef}
+            className="flex flex-col items-center gap-4 rounded-[1.5rem] border border-border/70 bg-white px-6 py-5 text-center shadow-sm sm:flex-row sm:justify-center sm:gap-6 sm:text-left"
+          >
             <GoogleLogo className="h-10 w-10" />
             <div>
               <p className="text-sm font-medium text-muted">Google Reviews</p>
@@ -123,14 +187,18 @@ export function HomeGoogleReviewsSection() {
           </div>
         </div>
 
-        <div className="mt-10 flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3 [&::-webkit-scrollbar]:hidden">
+        <div
+          ref={gridRef}
+          className="mt-10 flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3 [&::-webkit-scrollbar]:hidden"
+        >
           {googleReviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
         </div>
 
         <p className="mt-8 text-center text-xs text-muted">
-          Sample reviews shown for demonstration. Replace with verified Google reviews when available.
+          Sample reviews shown for demonstration. Replace with verified Google
+          reviews when available.
         </p>
       </div>
     </section>

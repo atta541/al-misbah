@@ -6,7 +6,7 @@ export const NAV_MAIN_HEIGHT = "5.5rem";
 export const NAV_TOP_BAR_SPACER_CLASS = "h-[var(--nav-top-bar-height)] shrink-0";
 
 export const NAV_MAIN_POSITION_CLASS =
-  "absolute inset-x-0 top-[var(--nav-main-top)] px-4 sm:px-6 lg:px-8";
+  "absolute inset-x-0 top-[var(--nav-main-top)] px-3 sm:px-5 lg:px-6";
 
 export const HERO_CONTENT_OFFSET_CLASS = "pt-[var(--hero-content-top)]";
 
