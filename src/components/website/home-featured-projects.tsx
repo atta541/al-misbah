@@ -4,22 +4,12 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FeaturedProjectsGrid } from "@/components/website/featured-projects-grid";
+import type { FeaturedProject } from "@/components/website/home-featured-project-row";
 import { getGsap } from "@/lib/gsap";
 import { websiteRoutes } from "@/lib/routes";
-import type { Project, ProjectImage } from "@/types";
-
-type SerializedCategory = {
-  id: string;
-  price: number;
-  priceTo: number | null;
-  isActive: boolean;
-};
 
 type HomeFeaturedProjectsSectionProps = {
-  projects: (Omit<Project, "categories"> & {
-    images: ProjectImage[];
-    categories: SerializedCategory[];
-  })[];
+  projects: FeaturedProject[];
 };
 
 export function HomeFeaturedProjectsSection({

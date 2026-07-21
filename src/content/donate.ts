@@ -49,23 +49,13 @@ export const donateBankAccounts: DonateBankAccount[] = [
   {
     id: "pkr-main",
     bankName: "Meezan Bank",
-    accountTitle: "Al-Misbah Center",
-    accountNumber: "0123456789012",
-    iban: "PK00MEZN0000001234567890",
-    branch: "Lahore Main Branch",
+    accountTitle: "ALI MURTAZA",
+    accountNumber: "11550107194829",
+    iban: "PK35MEZN0011550107194829",
+    branch: "QAINCHI AMAR SIDHU BR",
     currency: "PKR",
     qrImageUrl: "/QR-code/meezan-bank-qr.jpeg",
     qrLabel: "Scan to pay — Meezan Bank",
-  },
-  {
-    id: "usd-main",
-    bankName: "Meezan Bank",
-    accountTitle: "Al-Misbah Center",
-    accountNumber: "0123456789013",
-    iban: "PK00MEZN0000001234567891",
-    branch: "Lahore Main Branch",
-    swift: "MEZNPKKA",
-    currency: "USD",
   },
 ];
 

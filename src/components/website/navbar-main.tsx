@@ -51,25 +51,15 @@ export function NavbarMain({ settings, projects }: NavbarMainProps) {
       <div className="mx-auto w-full max-w-[90rem]">
           <div className="flex items-center justify-between gap-3 rounded-2xl rounded-bl-[1.75rem] rounded-tr-[1.75rem] bg-brand-dark px-3 py-3 shadow-lg shadow-black/10 sm:gap-4 sm:px-5 lg:px-6 lg:py-0">
             <Link href={websiteRoutes.home} className="relative z-10 shrink-0">
-              <div className="flex min-h-[4.25rem] min-w-[5rem] items-center justify-center rounded-2xl bg-white px-3 py-2.5 shadow-md sm:min-h-[4.75rem] sm:min-w-[6rem] sm:px-4">
-                {settings.logoUrl ? (
-                  <Image
-                    src={settings.logoUrl}
-                    alt={settings.websiteName}
-                    width={88}
-                    height={64}
-                    className="h-11 w-auto object-contain sm:h-12"
-                  />
-                ) : (
-                  <div className="text-center">
-                    <span className="block text-lg font-bold leading-none text-brand-dark sm:text-xl">
-                      AM
-                    </span>
-                    <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.18em] text-brand sm:text-[10px]">
-                      Center
-                    </span>
-                  </div>
-                )}
+              <div className="relative flex h-[4.25rem] w-[5rem] items-center justify-center overflow-hidden rounded-2xl bg-white shadow-md sm:h-[4.75rem] sm:w-[6rem]">
+                <Image
+                  src="/logo/logo.png"
+                  alt={settings.websiteName}
+                  fill
+                  priority
+                  sizes="96px"
+                  className="scale-[2.7] object-contain"
+                />
               </div>
             </Link>
 

@@ -1,21 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ProjectCard } from "@/components/website/project-card";
+import {
+  HomeFeaturedProjectRow,
+  type FeaturedProject,
+} from "@/components/website/home-featured-project-row";
 import { getGsap } from "@/lib/gsap";
-import type { Project, ProjectImage } from "@/types";
-
-type SerializedCategory = {
-  price: number;
-  priceTo: number | null;
-  isActive: boolean;
-};
 
 type FeaturedProjectsGridProps = {
-  projects: (Omit<Project, "categories"> & {
-    images: ProjectImage[];
-    categories: SerializedCategory[];
-  })[];
+  projects: FeaturedProject[];
 };
 
 export function FeaturedProjectsGrid({ projects }: FeaturedProjectsGridProps) {
@@ -26,22 +19,53 @@ export function FeaturedProjectsGrid({ projects }: FeaturedProjectsGridProps) {
     if (!root) return;
 
     const { gsap } = getGsap();
-    const cards = root.querySelectorAll<HTMLElement>("[data-project-card]");
-    if (cards.length === 0) return;
-
     const ctx = gsap.context(() => {
-      gsap.from(cards, {
-        opacity: 0,
-        y: 48,
-        scale: 0.96,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.12,
-        scrollTrigger: {
-          trigger: root,
-          start: "top 80%",
-          once: true,
-        },
+      const rows = root.querySelectorAll<HTMLElement>("[data-featured-row]");
+
+      rows.forEach((row, index) => {
+        const image = row.querySelector<HTMLElement>("[data-featured-image]");
+        const content = row.querySelector<HTMLElement>(
+          "[data-featured-content]",
+        );
+        if (!image || !content) return;
+
+        const imageOnRight = index % 2 === 1;
+
+        gsap.fromTo(
+          image,
+          { autoAlpha: 0, x: imageOnRight ? 42 : -42, scale: 0.97 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: "power3.out",
+            clearProps: "opacity,visibility,transform",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 78%",
+              once: true,
+            },
+          },
+        );
+
+        gsap.fromTo(
+          content,
+          { autoAlpha: 0, x: imageOnRight ? -32 : 32 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            duration: 0.75,
+            delay: 0.08,
+            ease: "power3.out",
+            clearProps: "opacity,visibility,transform",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 78%",
+              once: true,
+            },
+          },
+        );
       });
     }, root);
 
@@ -51,12 +75,14 @@ export function FeaturedProjectsGrid({ projects }: FeaturedProjectsGridProps) {
   return (
     <div
       ref={sectionRef}
-      className="mt-12 grid gap-8 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3 xl:gap-8"
+      className="mt-14"
     >
-      {projects.map((project) => (
-        <div key={project.id} data-project-card>
-          <ProjectCard project={project} />
-        </div>
+      {projects.map((project, index) => (
+        <HomeFeaturedProjectRow
+          key={project.id}
+          project={project}
+          index={index}
+        />
       ))}
     </div>
   );
