@@ -4,6 +4,7 @@ import { HomeGoogleReviewsSection } from "@/components/website/home-google-revie
 import { HomeHeroSection } from "@/components/website/home-hero-section";
 import { HomeMissionVisionSection } from "@/components/website/home-mission-vision-section";
 import { HomeVideoSection } from "@/components/website/home-video-section";
+import { serializeProjectCategories } from "@/lib/serialize-project";
 import { heroService } from "@/services/hero.service";
 import { homeVideoService } from "@/services/home-video.service";
 import { projectService } from "@/services/project.service";
@@ -17,13 +18,15 @@ export default async function HomePage() {
     projectService.listFeatured(),
   ]);
 
+  const projects = featuredProjects.map(serializeProjectCategories);
+
   return (
     <>
       <HomeHeroSection slides={slides} />
       <HomeVideoSection video={video} />
       <HomeMissionVisionSection />
       <HomeCollaborationsSection />
-      <HomeFeaturedProjectsSection projects={featuredProjects} />
+      <HomeFeaturedProjectsSection projects={projects} />
       <HomeGoogleReviewsSection />
     </>
   );

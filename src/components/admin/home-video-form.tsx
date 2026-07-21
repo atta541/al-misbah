@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
+  getHomeVideoUploadSignature,
   removeHomeVideo,
   saveHomeVideo,
   type HomeVideoActionState,
@@ -11,6 +12,10 @@ import {
   HOME_VIDEO_SPECS,
   HOME_VIDEO_UPLOAD_HINT,
 } from "@/lib/home-video";
+import {
+  buildHomeVideoThumbnailUrl,
+  uploadVideoDirectToCloudinary,
+} from "@/lib/home-video-upload-client";
 import type { HomeVideo } from "@/types";
 
 type HomeVideoFormProps = {
@@ -24,9 +29,11 @@ async function validateVideoDuration(file: File): Promise<string | null> {
     return `Video must be ${HOME_VIDEO_SPECS.maxSizeMB}MB or smaller.`;
   }
 
-  if (!HOME_VIDEO_SPECS.allowedMimeTypes.includes(
-    file.type as (typeof HOME_VIDEO_SPECS.allowedMimeTypes)[number],
-  )) {
+  if (
+    !HOME_VIDEO_SPECS.allowedMimeTypes.includes(
+      file.type as (typeof HOME_VIDEO_SPECS.allowedMimeTypes)[number],
+    )
+  ) {
     return "Only MP4 or WebM videos are allowed.";
   }
 
@@ -56,29 +63,92 @@ async function validateVideoDuration(file: File): Promise<string | null> {
 
 export function HomeVideoForm({ video }: HomeVideoFormProps) {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(
-    saveHomeVideo,
-    initialState,
-  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [state, setState] = useState<HomeVideoActionState>(initialState);
   const [deleteState, deleteAction, isDeleting] = useActionState(
     removeHomeVideo,
     initialState,
   );
+  const [isPending, startTransition] = useTransition();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     video?.videoUrl ?? null,
   );
   const [clientError, setClientError] = useState<string | null>(null);
+  const [uploadPercent, setUploadPercent] = useState<number | null>(null);
 
   useEffect(() => {
     if (state.success || deleteState.success) {
       setClientError(null);
+      setSelectedFile(null);
+      setUploadPercent(null);
       router.refresh();
     }
   }, [state.success, deleteState.success, router]);
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setClientError(null);
+    setState(initialState);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    startTransition(async () => {
+      try {
+        if (selectedFile) {
+          setUploadPercent(0);
+          const params = await getHomeVideoUploadSignature();
+          const uploaded = await uploadVideoDirectToCloudinary(
+            selectedFile,
+            params,
+            (percent) => setUploadPercent(percent),
+          );
+
+          formData.set("videoUrl", uploaded.secure_url);
+          formData.set("videoPublicId", uploaded.public_id);
+          formData.set(
+            "thumbnailUrl",
+            buildHomeVideoThumbnailUrl(params.cloudName, uploaded.public_id),
+          );
+          if (video?.videoPublicId) {
+            formData.set("previousVideoPublicId", video.videoPublicId);
+          }
+        } else if (video) {
+          formData.set("videoUrl", video.videoUrl);
+          formData.set("videoPublicId", video.videoPublicId ?? "");
+          formData.set("thumbnailUrl", video.thumbnailUrl ?? "");
+        } else {
+          setClientError("Introduction video file is required.");
+          setUploadPercent(null);
+          return;
+        }
+
+        formData.delete("video");
+        const result = await saveHomeVideo(null, formData);
+        setState(result);
+        if (result.success) {
+          setPreviewUrl(
+            String(formData.get("videoUrl") || video?.videoUrl || null),
+          );
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+          setSelectedFile(null);
+        }
+      } catch (error) {
+        setClientError(
+          error instanceof Error ? error.message : "Failed to upload video.",
+        );
+      } finally {
+        setUploadPercent(null);
+      }
+    });
+  }
+
   return (
     <div className="space-y-6">
-      <form action={formAction} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <Field
@@ -141,6 +211,7 @@ export function HomeVideoForm({ video }: HomeVideoFormProps) {
               Video file {video ? "(replace optional)" : "*"}
             </label>
             <input
+              ref={fileInputRef}
               id="video"
               name="video"
               type="file"
@@ -149,8 +220,10 @@ export function HomeVideoForm({ video }: HomeVideoFormProps) {
               onChange={async (event) => {
                 const file = event.target.files?.[0];
                 setClientError(null);
+                setState(initialState);
 
                 if (!file) {
+                  setSelectedFile(null);
                   setPreviewUrl(video?.videoUrl ?? null);
                   return;
                 }
@@ -159,30 +232,31 @@ export function HomeVideoForm({ video }: HomeVideoFormProps) {
                 if (validationError) {
                   setClientError(validationError);
                   event.target.value = "";
+                  setSelectedFile(null);
                   setPreviewUrl(video?.videoUrl ?? null);
                   return;
                 }
 
+                setSelectedFile(file);
                 setPreviewUrl(URL.createObjectURL(file));
               }}
               required={!video}
             />
-            {video ? (
-              <>
-                <input type="hidden" name="videoUrl" value={video.videoUrl} />
-                <input
-                  type="hidden"
-                  name="videoPublicId"
-                  value={video.videoPublicId ?? ""}
-                />
-                <input
-                  type="hidden"
-                  name="thumbnailUrl"
-                  value={video.thumbnailUrl ?? ""}
-                />
-              </>
-            ) : null}
             <p className="text-xs text-slate-500">{HOME_VIDEO_UPLOAD_HINT}</p>
+            {uploadPercent != null ? (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-slate-600">
+                  <span>Uploading to Cloudinary…</span>
+                  <span>{uploadPercent}%</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full bg-emerald-500 transition-[width]"
+                    style={{ width: `${uploadPercent}%` }}
+                  />
+                </div>
+              </div>
+            ) : null}
             {previewUrl ? (
               <div className="overflow-hidden rounded-2xl border border-slate-200 bg-black">
                 <video
@@ -214,7 +288,13 @@ export function HomeVideoForm({ video }: HomeVideoFormProps) {
           disabled={isPending || Boolean(clientError)}
           className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60"
         >
-          {isPending ? "Saving..." : video ? "Update video" : "Save video"}
+          {isPending
+            ? uploadPercent != null
+              ? `Uploading ${uploadPercent}%…`
+              : "Saving…"
+            : video
+              ? "Update video"
+              : "Save video"}
         </button>
       </form>
 

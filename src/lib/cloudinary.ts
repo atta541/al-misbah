@@ -19,6 +19,10 @@ function getHomeVideoFolder() {
   return process.env.CLOUDINARY_VIDEO_FOLDER ?? "almisbah/home-video";
 }
 
+export function getHomeVideoCloudinaryFolder() {
+  return getHomeVideoFolder();
+}
+
 function ensureCloudinaryConfig() {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;

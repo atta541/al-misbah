@@ -1,27 +1,23 @@
 import type { NextConfig } from "next";
-import { getCloudinaryCloudName } from "@/lib/cloudinary-config";
-
-const cloudinaryCloudName = getCloudinaryCloudName();
 
 const nextConfig: NextConfig = {
-  // Homepage video uploads go through Server Actions (max 50MB in app validation).
+  // Large media uploads (esp. home video) use direct Cloudinary upload from the browser.
+  // Keep a higher ceiling for any remaining server-action file paths.
   experimental: {
     serverActions: {
-      bodySizeLimit: "55mb",
+      bodySizeLimit: "105mb",
     },
-    // Middleware/proxy buffers request bodies for /admin routes (default 10MB).
-    proxyClientMaxBodySize: "55mb",
+    proxyClientMaxBodySize: "105mb",
   },
   images: {
-    remotePatterns: cloudinaryCloudName
-      ? [
-          {
-            protocol: "https",
-            hostname: "res.cloudinary.com",
-            pathname: `/${cloudinaryCloudName}/**`,
-          },
-        ]
-      : [],
+    // Allow any Cloudinary cloud (uploaded assets may use a previous account name).
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

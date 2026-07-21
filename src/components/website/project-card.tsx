@@ -3,11 +3,15 @@ import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { getProjectPriceLabel } from "@/lib/project-price";
 import { websiteRoutes } from "@/lib/routes";
-import type { Project, ProjectCategory } from "@/types";
+import type { Project } from "@/types";
 
 type ProjectCardProps = {
   project: Pick<Project, "title" | "slug" | "featuredImage" | "currency"> & {
-    categories: Pick<ProjectCategory, "price" | "priceTo" | "isActive">[];
+    categories: Array<{
+      price: number;
+      priceTo: number | null;
+      isActive: boolean;
+    }>;
   };
 };
 

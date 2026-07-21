@@ -6,12 +6,19 @@ import { ArrowRight } from "lucide-react";
 import { FeaturedProjectsGrid } from "@/components/website/featured-projects-grid";
 import { getGsap } from "@/lib/gsap";
 import { websiteRoutes } from "@/lib/routes";
-import type { Project, ProjectCategory, ProjectImage } from "@/types";
+import type { Project, ProjectImage } from "@/types";
+
+type SerializedCategory = {
+  id: string;
+  price: number;
+  priceTo: number | null;
+  isActive: boolean;
+};
 
 type HomeFeaturedProjectsSectionProps = {
-  projects: (Project & {
+  projects: (Omit<Project, "categories"> & {
     images: ProjectImage[];
-    categories: ProjectCategory[];
+    categories: SerializedCategory[];
   })[];
 };
 

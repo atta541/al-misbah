@@ -1,11 +1,14 @@
 import { ProjectCard } from "@/components/website/project-card";
 import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
+import { serializeProjectCategories } from "@/lib/serialize-project";
 import { projectService } from "@/services/project.service";
 
 export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-  const projects = await projectService.listPublished();
+  const projects = (await projectService.listPublished()).map(
+    serializeProjectCategories,
+  );
 
   return (
     <section className={`bg-white pb-14 sm:pb-20 ${PAGE_CONTENT_OFFSET_CLASS}`}>

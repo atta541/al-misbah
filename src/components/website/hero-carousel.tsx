@@ -45,7 +45,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   return (
     <section
-      className={`relative overflow-hidden ${HERO_MIN_HEIGHT_CLASS}`}
+      className={`relative w-full overflow-hidden ${HERO_MIN_HEIGHT_CLASS}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
@@ -66,7 +66,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             fill
             priority={slideIndex === 0}
             sizes="100vw"
-            className="object-cover"
+            className="object-cover object-center"
           />
         </div>
       ))}

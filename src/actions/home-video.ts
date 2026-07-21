@@ -3,9 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/auth/require-admin";
 import {
+  createSignedUploadParams,
   deleteCloudinaryVideo,
+  getHomeVideoCloudinaryFolder,
   uploadHomeVideo,
 } from "@/lib/cloudinary";
+import type { SignedUploadParams } from "@/lib/gallery-upload-client";
 import { adminRoutes, websiteRoutes } from "@/lib/routes";
 import { homeVideoService } from "@/services/home-video.service";
 import { homeVideoSchema } from "@/validations/home-video";
@@ -35,30 +38,36 @@ async function resolveVideoFromForm(
   formData: FormData,
   options: { required: boolean },
 ) {
-  const videoFile = formData.get("video");
-
-  if (videoFile instanceof File && videoFile.size > 0) {
-    return uploadHomeVideo(videoFile);
-  }
-
+  // Preferred path: browser uploaded directly to Cloudinary.
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const videoPublicId = String(formData.get("videoPublicId") ?? "").trim();
   const thumbnailUrl = String(formData.get("thumbnailUrl") ?? "").trim();
 
-  if (!videoUrl) {
-    if (options.required) {
-      throw new Error("Introduction video file is required.");
-    }
-
-    return null;
+  if (videoUrl) {
+    return {
+      url: videoUrl,
+      publicId: videoPublicId || null,
+      thumbnailUrl: thumbnailUrl || null,
+      durationSeconds: 0,
+    };
   }
 
-  return {
-    url: videoUrl,
-    publicId: videoPublicId || null,
-    thumbnailUrl: thumbnailUrl || null,
-    durationSeconds: 0,
-  };
+  // Legacy fallback: file posted through the server action.
+  const videoFile = formData.get("video");
+  if (videoFile instanceof File && videoFile.size > 0) {
+    return uploadHomeVideo(videoFile);
+  }
+
+  if (options.required) {
+    throw new Error("Introduction video file is required.");
+  }
+
+  return null;
+}
+
+export async function getHomeVideoUploadSignature(): Promise<SignedUploadParams> {
+  await requireAdminSession();
+  return createSignedUploadParams(getHomeVideoCloudinaryFolder());
 }
 
 export async function saveHomeVideo(
@@ -83,11 +92,21 @@ export async function saveHomeVideo(
       throw new Error("Introduction video file is required.");
     }
 
-    const videoFile = formData.get("video");
-    const isNewUpload = videoFile instanceof File && videoFile.size > 0;
+    const previousPublicId = String(
+      formData.get("previousVideoPublicId") ?? "",
+    ).trim();
+    const isNewUpload =
+      Boolean(uploaded.publicId) &&
+      uploaded.publicId !== (existing?.videoPublicId ?? null);
 
     if (existing?.videoPublicId && isNewUpload) {
       await deleteCloudinaryVideo(existing.videoPublicId);
+    } else if (
+      previousPublicId &&
+      uploaded.publicId &&
+      previousPublicId !== uploaded.publicId
+    ) {
+      await deleteCloudinaryVideo(previousPublicId);
     }
 
     await homeVideoService.upsertSingleton({

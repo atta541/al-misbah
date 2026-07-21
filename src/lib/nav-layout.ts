@@ -10,8 +10,13 @@ export const NAV_MAIN_POSITION_CLASS =
 
 export const HERO_CONTENT_OFFSET_CLASS = "pt-[var(--hero-content-top)]";
 
+/**
+ * Mobile: aspect-ratio matches designed hero frames (1920×900 ≈ 32/15)
+ * so object-cover fills edge-to-edge without letterboxing.
+ * Desktop: near full viewport height.
+ */
 export const HERO_MIN_HEIGHT_CLASS =
-  "min-h-[calc(100svh-var(--nav-top-bar-height))]";
+  "aspect-[32/15] min-h-[14rem] sm:aspect-auto sm:min-h-[calc(100svh-var(--nav-top-bar-height))]";
 
 /** Top padding so page text clears the overlapping main navbar. */
 export const PAGE_CONTENT_OFFSET_CLASS =

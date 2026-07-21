@@ -3,12 +3,18 @@
 import { useEffect, useRef } from "react";
 import { ProjectCard } from "@/components/website/project-card";
 import { getGsap } from "@/lib/gsap";
-import type { Project, ProjectCategory, ProjectImage } from "@/types";
+import type { Project, ProjectImage } from "@/types";
+
+type SerializedCategory = {
+  price: number;
+  priceTo: number | null;
+  isActive: boolean;
+};
 
 type FeaturedProjectsGridProps = {
-  projects: (Project & {
+  projects: (Omit<Project, "categories"> & {
     images: ProjectImage[];
-    categories: ProjectCategory[];
+    categories: SerializedCategory[];
   })[];
 };
 
