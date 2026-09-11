@@ -1,11 +1,13 @@
 import { AboutPageContent } from "@/components/website/about-page-content";
 import { aboutPageContent } from "@/content/about";
 import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: `About | Al-Misbah Center`,
+export const metadata = createPageMetadata({
+  title: "About Us",
   description: aboutPageContent.lead,
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

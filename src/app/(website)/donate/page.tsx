@@ -1,11 +1,13 @@
 import { DonatePageContent } from "@/components/website/donate-page-content";
 import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
 import { donatePageContent } from "@/content/donate";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: `${donatePageContent.title} | Al-Misbah Center`,
+export const metadata = createPageMetadata({
+  title: donatePageContent.title,
   description: donatePageContent.description,
-};
+  path: "/donate",
+});
 
 export default function DonatePage() {
   return (

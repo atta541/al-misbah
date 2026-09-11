@@ -1,9 +1,17 @@
 import { ProjectCard } from "@/components/website/project-card";
 import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
+import { createPageMetadata } from "@/lib/seo";
 import { serializeProjectCategories } from "@/lib/serialize-project";
 import { projectService } from "@/services/project.service";
 
 export const revalidate = 3600;
+
+export const metadata = createPageMetadata({
+  title: "Projects",
+  description:
+    "Browse Al-Misbah Institute initiatives — clean water hand pumps, Quran Hifz education, and community programs you can sponsor with transparent checkout.",
+  path: "/projects",
+});
 
 export default async function ProjectsPage() {
   const projects = (await projectService.listPublished()).map(

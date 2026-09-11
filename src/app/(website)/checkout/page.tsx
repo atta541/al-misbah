@@ -4,9 +4,17 @@ import { CheckoutForm } from "@/components/website/checkout-form";
 import { decimalToNumber } from "@/lib/currency";
 import { PAGE_CONTENT_OFFSET_CLASS } from "@/lib/nav-layout";
 import { websiteRoutes } from "@/lib/routes";
+import { createPageMetadata } from "@/lib/seo";
 import { projectService } from "@/services/project.service";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = createPageMetadata({
+  title: "Checkout",
+  description: "Complete your project sponsorship with Al-Misbah Institute.",
+  path: "/checkout",
+  noIndex: true,
+});
 
 type CheckoutPageProps = {
   searchParams: Promise<{

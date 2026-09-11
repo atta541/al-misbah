@@ -41,8 +41,28 @@ export async function generateMetadata({ params }: ProjectDetailPageProps) {
   }
 
   return {
-    title: `${project.title} | Al-Misbah Center`,
+    title: project.title,
     description: project.shortDescription,
+    alternates: {
+      canonical: `${websiteRoutes.projects}/${project.slug}`,
+    },
+    openGraph: {
+      title: project.title,
+      description: project.shortDescription,
+      type: "article",
+      images: [
+        {
+          url: project.featuredImage,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.shortDescription,
+      images: [project.featuredImage],
+    },
   };
 }
 

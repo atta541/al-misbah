@@ -21,11 +21,31 @@ export async function generateMetadata({ params }: GalleryCollectionPageProps) {
     return { title: "Gallery not found" };
   }
 
+  const description =
+    collection.description ??
+    `Photo collection: ${collection.title} from Al-Misbah Institute fieldwork.`;
+  const cover =
+    collection.coverImage ?? collection.images[0]?.imageUrl ?? undefined;
+
   return {
-    title: `${collection.title} | Gallery | Al-Misbah Center`,
-    description:
-      collection.description ??
-      `Photo collection: ${collection.title} at Al-Misbah Center.`,
+    title: collection.title,
+    description,
+    openGraph: {
+      title: collection.title,
+      description,
+      type: "website",
+      ...(cover
+        ? {
+            images: [{ url: cover, alt: collection.title }],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: collection.title,
+      description,
+      ...(cover ? { images: [cover] } : {}),
+    },
   };
 }
 
